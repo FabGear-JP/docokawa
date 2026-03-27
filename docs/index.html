@@ -31,6 +31,15 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-CXLV7Q8QMM');
+
+    // UTM source capture
+    (function(){
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var src = params.get('utm_source');
+        if(src){ sessionStorage.setItem('traffic_source', src); }
+      } catch(e) { /* sessionStorage blocked */ }
+    })();
   </script>
 
   <style>
@@ -372,7 +381,7 @@
     困っていたので作りました。
   </div>
   <a href="https://github.com/FabGear-JP/docokawa/releases/tag/v1.0" class="btn-dl"
-     onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'header'});}">
+     onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'releases_page',traffic_source:sessionStorage.getItem('traffic_source')||'direct'});}">
     ダウンロード（Windows / 無料）
   </a>
   <div class="sub-note">ネット接続不要 · インストーラー版 / ZIP版を選べます</div>
@@ -480,13 +489,13 @@
     <p>どちらも中身は同じです。お好きな方をどうぞ。</p>
     <br>
     <a href="https://github.com/FabGear-JP/docokawa/releases/download/v1.0/docokawa_setup_v1.0.exe" class="btn-dl"
-       onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'installer'});}">
+       onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'installer',traffic_source:sessionStorage.getItem('traffic_source')||'direct'});}">
       インストーラー版（推奨）
     </a>
     <p class="dl-note">実行するだけ &nbsp;·&nbsp; デスクトップにショートカット作成</p>
     <br>
     <a href="https://github.com/FabGear-JP/docokawa/releases/download/v1.0/docokawa_v1.0.zip" class="btn-dl btn-dl-sub"
-       onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'zip'});}">
+       onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'zip',traffic_source:sessionStorage.getItem('traffic_source')||'direct'});}">
       ZIP版（展開するだけ）
     </a>
     <p class="dl-note">インストール不要 &nbsp;·&nbsp; USBで持ち運べる</p>
@@ -509,7 +518,7 @@
         <h3>Googleフォーム</h3>
         <p>匿名で送れます。1分で終わります。</p>
         <a href="https://docs.google.com/forms/d/e/1FAIpQLScL1l5PX2rqogBOfeevneWZx0f7Pjg7IJsOoGRPPwHXK8zh2Q/viewform" class="btn-form"
-           onclick="if(typeof gtag!=='undefined'){gtag('event','feedback_click',{event_category:'engagement',event_label:'google_form'});}">フォームで送る</a>
+           onclick="if(typeof gtag!=='undefined'){gtag('event','feedback_click',{event_category:'engagement',event_label:'google_form',traffic_source:sessionStorage.getItem('traffic_source')||'direct'});}">フォームで送る</a>
       </div>
       <div class="feedback-card">
         <h3>メール</h3>
