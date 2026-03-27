@@ -360,30 +360,28 @@
   <div class="logo">FabGear</div>
   <h1>ドコカワ</h1>
   <div class="tagline">
-    設変後のSTEP、どこが変わったか<br>
-    目視してませんか。
+    STEPの設変、どこ変わったかわからない問題。<br>
+    自分が困ってたので作りました。
   </div>
   <a href="https://github.com/FabGear-JP/docokawa/releases/tag/v1.0" class="btn-dl"
      onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'header'});}">
-    無料ダウンロード（Windows用）
+    ダウンロード（Windows / 無料）
   </a>
-  <div class="sub-note">インストール不要 &nbsp;·&nbsp; ネット接続不要 &nbsp;·&nbsp; 無料</div>
+  <div class="sub-note">インストール不要 · ネット接続不要 · ZIP展開するだけ</div>
 </header>
 
 <!-- 課題提示 -->
 <div class="section-problem">
   <div class="section-inner">
-    <h2>設変確認、毎回こうなってませんか</h2>
+    <h2>こういう状況で使ってます</h2>
     <ul class="pain-list">
-      <li>「修正しました」とだけ書いてあるSTEPが戻ってきた</li>
-      <li>旧版と新版をCADで両方開いて、部品を一個ずつ見比べる</li>
-      <li>部品が50個、100個あるとお手上げ</li>
-      <li>CADの比較機能はネイティブ形式のみ対応、STEPは非対応</li>
-      <li>見落としがないか不安なまま次の工程に流す</li>
+      <li>「修正しました」とだけ書いてあるSTEPが戻ってきた。どこを？</li>
+      <li>CADで両方開いて部品を一個ずつ見比べる。50部品あると無理</li>
+      <li>CADの比較機能、STEPには対応してない</li>
+      <li>結局目視。見落としが怖いまま次工程に流す</li>
     </ul>
     <div class="solution-text">
-      ドコカワはSTEPファイルを2つ読み込んで、変更箇所を自動で一覧表示します。<br>
-      目視30分が数秒になりました。
+      STEPを2つ放り込むと、変更・追加・削除された部品が一覧で出ます。
     </div>
   </div>
 </div>
@@ -391,33 +389,26 @@
 <!-- 機能紹介 -->
 <div>
   <div class="section-inner">
-    <h2>できること</h2>
+    <h2>何ができるか</h2>
     <div class="features-grid">
       <div class="feature-card">
         <h3>STEP差分チェック</h3>
-        <p>変更前後の部品を自動比較。変更・追加・削除を一覧表示。BBox差・体積差・面数の変化も出ます。</p>
+        <p>変更・追加・削除を一覧表示。BBox差、体積差、面数の変化も出る。これがメイン機能。</p>
       </div>
       <div class="feature-card">
         <h3>3Dビューア</h3>
-        <p>差分が出た部品を選択するとブラウザ上でハイライト表示。回転・ズームで確認できます。</p>
+        <p>差分が出た部品をクリックするとブラウザ上で3D表示。回転・ズームできる。</p>
       </div>
       <div class="feature-card">
         <h3>ローカル完結</h3>
-        <p>外部通信は一切なし。STEPは処理後に自動削除。社外秘データをクラウドに送る必要はありません。</p>
+        <p>外部通信なし。STEPは処理後に消える。社外秘でも安心して使える。</p>
       </div>
       <div class="feature-card">
         <h3>CSV / Excel出力</h3>
-        <p>差分結果をそのままExcelに出せます。設計変更の記録に使えます。</p>
-      </div>
-      <div class="feature-card">
-        <h3>DfM警告</h3>
-        <p>薄壁・深穴・鋭角を自動検出。加工困難な箇所を事前に確認できます。</p>
-      </div>
-      <div class="feature-card">
-        <h3>仕様チェック</h3>
-        <p>STEPの寸法とPDF仕様書の記載を突き合わせ。数値の食い違いを検出します。</p>
+        <p>差分結果をExcelに出せる。設変記録としてそのまま使える。</p>
       </div>
     </div>
+    <p style="margin-top: 16px; font-size: 14px; color: #888;">他にDfM警告（薄壁・深穴の自動検出）、仕様チェック（STEPとPDFの数値突き合わせ）もあります。作り始めたら増えた。</p>
   </div>
 </div>
 
@@ -473,7 +464,7 @@
 <div class="section-download">
   <div class="section-inner">
     <h2>ダウンロード</h2>
-    <p>GitHub Releasesで配布しています。ZIPを展開してexeを実行するだけです。</p>
+    <p>ZIPを展開して、中のexeを実行するだけ。</p>
     <br>
     <a href="https://github.com/FabGear-JP/docokawa/releases/tag/v1.0" class="btn-dl"
        onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'download_section'});}">
@@ -483,7 +474,7 @@
     <div class="qiita-link">
       <p>技術的な詳細はQiita記事にまとめています：</p>
       <a href="https://qiita.com/FabGear_JP/items/9880118b15b2d46a1c51">
-        設変のたびに「どこ変わった？」を目視してた機械設計者が、比較ツールを自作した話
+        Qiita: 設変のたびに「どこ変わった？」を目視してた話
       </a>
     </div>
   </div>
@@ -492,12 +483,12 @@
 <!-- フィードバック -->
 <div class="section-feedback">
   <div class="section-inner">
-    <h2>フィードバック・ご意見</h2>
-    <p>使ってみた感想、バグ報告、こんな機能が欲しいなど、なんでも歓迎です。</p>
+    <h2>感想・バグ報告</h2>
+    <p>使ってみて困ったこと、「こうしてほしい」があれば教えてください。</p>
     <div class="feedback-methods">
       <div class="feedback-card">
         <h3>Googleフォーム</h3>
-        <p>匿名で送れます。1〜2分で入力できます。</p>
+        <p>匿名で送れます。1分で終わります。</p>
         <!-- TODO: Googleフォームを作成後、下のhrefのURLを差し替えてください -->
         <a href="https://forms.gle/PLACEHOLDER" class="btn-form"
            onclick="if(typeof gtag!=='undefined'){gtag('event','feedback_click',{event_category:'engagement',event_label:'google_form'});}">フォームで送る</a>
@@ -521,7 +512,7 @@
     <a href="https://github.com/FabGear-JP">GitHub</a> &nbsp;|&nbsp;
     <a href="https://github.com/FabGear-JP/docokawa/releases/tag/v1.0">ダウンロード</a>
   </p>
-  <p>設備設計者が自分の業務効率化のために作ったツールです。</p>
+  <p>設備設計者が自分用に作ったツールです。</p>
 </footer>
 
 </body>
