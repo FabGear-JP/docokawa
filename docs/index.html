@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO: タイトルと説明文 -->
+  <title>ドコカワ — STEP図面の変更箇所を自動検出する無料ツール | FabGear</title>
+  <meta name="description" content="設変後のSTEPファイル、どこが変わったか目視してませんか。ドコカワはSTEP同士を比較して変更箇所を自動で一覧表示します。Windows用デスクトップアプリ、インストール不要、無料。">
+  <meta name="keywords" content="STEP 図面比較, 設計変更 確認, CAD 差分, 機械設計 ツール, STEP ファイル 比較, 設変確認, STEP差分チェック, フリーソフト">
+
+  <!-- OGP: SNSでシェアされたときのカード表示 -->
+  <meta property="og:title" content="ドコカワ — STEP図面の変更箇所を自動検出">
+  <meta property="og:description" content="設変後のSTEPを比較して変更箇所を一覧表示。無料、ローカル完結、インストール不要。">
+  <meta property="og:url" content="https://fabgear-jp.github.io/docokawa/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FabGear">
+  <meta property="og:image" content="https://fabgear-jp.github.io/docokawa/screenshot.png">
+  <meta name="twitter:image" content="https://fabgear-jp.github.io/docokawa/screenshot.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@FabGear_jp">
+  <meta name="twitter:title" content="ドコカワ — STEP図面の変更箇所を自動検出">
+  <meta name="twitter:description" content="設変後のSTEPを比較して変更箇所を一覧表示。無料、ローカル完結、インストール不要。">
+
+  <!-- GA4: Google Analytics 4 計測タグ -->
+  <!-- GA4: 下の2行の G-XXXXXXXXXX を実際の測定IDに差し替えてください -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script> -->
+
+  <style>
+    /* ===== リセット ===== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ===== ベース ===== */
+    body {
+      font-family: "Hiragino Kaku Gothic ProN", "Meiryo", "Noto Sans JP", sans-serif;
+      color: #222;
+      background: #fff;
+      line-height: 1.75;
+      font-size: 16px;
+    }
+    a {
+      color: #0066cc;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ===== ボタン ===== */
+    .btn-dl {
+      display: inline-block;
+      background: #e67e22;
+      color: #fff;
+      text-decoration: none;
+      padding: 16px 44px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 5px;
+      letter-spacing: 0.02em;
+      transition: background 0.15s;
+    }
+    .btn-dl:hover {
+      background: #d35400;
+      text-decoration: none;
+    }
+
+    /* ===== ヘッダー ===== */
+    header {
+      background: #1a1a2e;
+      color: #fff;
+      padding: 64px 20px 56px;
+      text-align: center;
+    }
+    header .logo {
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: #888;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    header h1 {
+      font-size: clamp(32px, 8vw, 52px);
+      font-weight: bold;
+      margin-bottom: 18px;
+      letter-spacing: 0.05em;
+    }
+    header .tagline {
+      font-size: clamp(16px, 4vw, 20px);
+      color: #bbb;
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+    header .sub-note {
+      font-size: 13px;
+      color: #777;
+      margin-top: 14px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ===== セクション共通 ===== */
+    .section-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 64px 20px;
+    }
+    .section-inner h2 {
+      font-size: clamp(20px, 5vw, 26px);
+      font-weight: bold;
+      margin-bottom: 28px;
+      border-left: 4px solid #e67e22;
+      padding-left: 14px;
+      line-height: 1.4;
+    }
+    .section-inner p {
+      margin-bottom: 16px;
+    }
+
+    /* ===== 課題セクション ===== */
+    .section-problem {
+      background: #f7f7f7;
+    }
+    .pain-list {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 24px;
+    }
+    .pain-list li {
+      padding: 12px 0 12px 28px;
+      border-bottom: 1px solid #e8e8e8;
+      position: relative;
+      font-size: 15px;
+    }
+    .pain-list li:first-child {
+      border-top: 1px solid #e8e8e8;
+    }
+    .pain-list li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: #e67e22;
+      font-weight: bold;
+    }
+    .solution-text {
+      background: #fff;
+      border-left: 3px solid #e67e22;
+      padding: 16px 20px;
+      font-size: 15px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* ===== 機能紹介 ===== */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 8px;
+    }
+    .feature-card {
+      border: 1px solid #e0e0e0;
+      padding: 22px 20px;
+      border-radius: 5px;
+      background: #fff;
+    }
+    .feature-card h3 {
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #1a1a2e;
+    }
+    .feature-card p {
+      font-size: 13px;
+      color: #555;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ===== スクショ ===== */
+    .section-screenshots {
+      background: #eef2f7;
+    }
+    .screenshot-block {
+      margin-bottom: 32px;
+    }
+    .screenshot-block:last-child {
+      margin-bottom: 0;
+    }
+    .screenshot-placeholder {
+      background: #d8e0ea;
+      border: 2px dashed #aab8c8;
+      border-radius: 5px;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #7a8fa6;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .screenshot-caption {
+      font-size: 13px;
+      color: #666;
+    }
+
+    /* ===== スペック ===== */
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+    .spec-table th,
+    .spec-table td {
+      border: 1px solid #ddd;
+      padding: 11px 16px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .spec-table th {
+      background: #f2f2f2;
+      font-weight: bold;
+      width: 36%;
+      color: #333;
+    }
+    .spec-table tr:nth-child(even) td {
+      background: #fafafa;
+    }
+
+    /* ===== ダウンロードセクション ===== */
+    .section-download {
+      background: #1a1a2e;
+      color: #fff;
+    }
+    .section-download .section-inner {
+      text-align: center;
+    }
+    .section-download h2 {
+      color: #fff;
+      border-left-color: #e67e22;
+    }
+    .section-download p {
+      color: #bbb;
+    }
+    .dl-note {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #777;
+    }
+    .qiita-link {
+      margin-top: 32px;
+      font-size: 14px;
+      color: #aaa;
+      border-top: 1px solid #333;
+      padding-top: 28px;
+    }
+    .qiita-link a {
+      color: #88aacc;
+    }
+
+    /* ===== フィードバックセクション ===== */
+    .section-feedback {
+      background: #f7f7f7;
+    }
+    .feedback-methods {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-top: 8px;
+    }
+    .feedback-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      padding: 22px 20px;
+    }
+    .feedback-card h3 {
+      font-size: 14px;
+      font-weight: bold;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+    .feedback-card p {
+      font-size: 14px;
+      color: #444;
+      margin-bottom: 14px;
+    }
+    .btn-form {
+      display: inline-block;
+      background: #1a1a2e;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 4px;
+    }
+    .btn-form:hover {
+      background: #2d2d4e;
+      text-decoration: none;
+    }
+    .mail-link {
+      font-size: 15px;
+      word-break: break-all;
+    }
+
+    /* ===== フッター ===== */
+    footer {
+      background: #111;
+      color: #666;
+      text-align: center;
+      padding: 28px 20px;
+      font-size: 13px;
+      line-height: 2;
+    }
+    footer a {
+      color: #999;
+    }
+    footer a:hover {
+      color: #bbb;
+    }
+
+    /* ===== スマホ調整 ===== */
+    @media (max-width: 480px) {
+      header {
+        padding: 48px 16px 40px;
+      }
+      .btn-dl {
+        padding: 14px 32px;
+        font-size: 16px;
+      }
+      .section-inner {
+        padding: 48px 16px;
+      }
+      .spec-table th {
+        width: 40%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<header>
+  <div class="logo">FabGear</div>
+  <h1>ドコカワ</h1>
+  <div class="tagline">
+    設変後のSTEP、どこが変わったか<br>
+    目視してませんか。
+  </div>
+  <a href="https://github.com/FabGear-JP/docokawa/releases/tag/v1.0" class="btn-dl"
+     onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'header'});}">
+    無料ダウンロード（Windows用）
+  </a>
+  <div class="sub-note">インストール不要 &nbsp;·&nbsp; ネット接続不要 &nbsp;·&nbsp; 無料</div>
+</header>
+
+<!-- 課題提示 -->
+<div class="section-problem">
+  <div class="section-inner">
+    <h2>設変確認、毎回こうなってませんか</h2>
+    <ul class="pain-list">
+      <li>「修正しました」とだけ書いてあるSTEPが戻ってきた</li>
+      <li>旧版と新版をCADで両方開いて、部品を一個ずつ見比べる</li>
+      <li>部品が50個、100個あるとお手上げ</li>
+      <li>CADの比較機能はネイティブ形式のみ対応、STEPは非対応</li>
+      <li>見落としがないか不安なまま次の工程に流す</li>
+    </ul>
+    <div class="solution-text">
+      ドコカワはSTEPファイルを2つ読み込んで、変更箇所を自動で一覧表示します。<br>
+      目視30分が数秒になりました。
+    </div>
+  </div>
+</div>
+
+<!-- 機能紹介 -->
+<div>
+  <div class="section-inner">
+    <h2>できること</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>STEP差分チェック</h3>
+        <p>変更前後の部品を自動比較。変更・追加・削除を一覧表示。BBox差・体積差・面数の変化も出ます。</p>
+      </div>
+      <div class="feature-card">
+        <h3>3Dビューア</h3>
+        <p>差分が出た部品を選択するとブラウザ上でハイライト表示。回転・ズームで確認できます。</p>
+      </div>
+      <div class="feature-card">
+        <h3>ローカル完結</h3>
+        <p>外部通信は一切なし。STEPは処理後に自動削除。社外秘データをクラウドに送る必要はありません。</p>
+      </div>
+      <div class="feature-card">
+        <h3>CSV / Excel出力</h3>
+        <p>差分結果をそのままExcelに出せます。設計変更の記録に使えます。</p>
+      </div>
+      <div class="feature-card">
+        <h3>DfM警告</h3>
+        <p>薄壁・深穴・鋭角を自動検出。加工困難な箇所を事前に確認できます。</p>
+      </div>
+      <div class="feature-card">
+        <h3>仕様チェック</h3>
+        <p>STEPの寸法とPDF仕様書の記載を突き合わせ。数値の食い違いを検出します。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- スクショ -->
+<div class="section-screenshots">
+  <div class="section-inner">
+    <h2>画面イメージ</h2>
+    <div class="screenshot-block">
+      <img src="screenshot1.png" alt="ドコカワ 差分チェック結果 — 変更テーブルと3D比較ビュー">
+      <p class="screenshot-caption">変更・追加・削除がテーブルで一覧表示。変更前後の形状を3Dで比較できます</p>
+    </div>
+    <div class="screenshot-block">
+      <img src="screenshot2.png" alt="ドコカワ 形状比較ビュー — 上面図・側面図での変更前後比較">
+      <p class="screenshot-caption">上面図・側面図など複数の視点で変更箇所を確認</p>
+    </div>
+  </div>
+</div>
+
+<!-- 動作環境・仕様 -->
+<div>
+  <div class="section-inner">
+    <h2>動作環境・仕様</h2>
+    <table class="spec-table">
+      <tr>
+        <th>対応OS</th>
+        <td>Windows 10 / 11（64bit）</td>
+      </tr>
+      <tr>
+        <th>インストール</th>
+        <td>不要（exe単体で動作）</td>
+      </tr>
+      <tr>
+        <th>ネット接続</th>
+        <td>不要（完全ローカル動作）</td>
+      </tr>
+      <tr>
+        <th>対応形式</th>
+        <td>STEP（.stp / .step）、PDF（仕様チェック機能）</td>
+      </tr>
+      <tr>
+        <th>価格</th>
+        <td>無料</td>
+      </tr>
+      <tr>
+        <th>バージョン</th>
+        <td>v1.0</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ダウンロード -->
+<div class="section-download">
+  <div class="section-inner">
+    <h2>ダウンロード</h2>
+    <p>GitHub Releasesで配布しています。ZIPを展開してexeを実行するだけです。</p>
+    <br>
+    <a href="https://github.com/FabGear-JP/docokawa/releases/tag/v1.0" class="btn-dl"
+       onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'download_section'});}">
+      ドコカワ v1.0 をダウンロード
+    </a>
+    <p class="dl-note">Windows用 &nbsp;·&nbsp; 無料 &nbsp;·&nbsp; ローカル完結</p>
+    <div class="qiita-link">
+      <p>技術的な詳細はQiita記事にまとめています：</p>
+      <a href="https://qiita.com/FabGear_JP/items/9880118b15b2d46a1c51">
+        設変のたびに「どこ変わった？」を目視してた機械設計者が、比較ツールを自作した話
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- フィードバック -->
+<div class="section-feedback">
+  <div class="section-inner">
+    <h2>フィードバック・ご意見</h2>
+    <p>使ってみた感想、バグ報告、こんな機能が欲しいなど、なんでも歓迎です。</p>
+    <div class="feedback-methods">
+      <div class="feedback-card">
+        <h3>Googleフォーム</h3>
+        <p>匿名で送れます。1〜2分で入力できます。</p>
+        <!-- TODO: Googleフォームを作成後、下のhrefのURLを差し替えてください -->
+        <a href="https://forms.gle/PLACEHOLDER" class="btn-form"
+           onclick="if(typeof gtag!=='undefined'){gtag('event','feedback_click',{event_category:'engagement',event_label:'google_form'});}">フォームで送る</a>
+      </div>
+      <div class="feedback-card">
+        <h3>メール</h3>
+        <p>詳しく伝えたい場合はメールでどうぞ。</p>
+        <p class="mail-link">
+          <a href="mailto:fabgear.jp@gmail.com">fabgear.jp@gmail.com</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- フッター -->
+<footer>
+  <p>
+    FabGear &nbsp;|&nbsp;
+    <a href="https://x.com/FabGear_jp">X: @FabGear_jp</a> &nbsp;|&nbsp;
+    <a href="https://github.com/FabGear-JP">GitHub</a> &nbsp;|&nbsp;
+    <a href="https://github.com/FabGear-JP/docokawa/releases/tag/v1.0">ダウンロード</a>
+  </p>
+  <p>設備設計者が自分の業務効率化のために作ったツールです。</p>
+</footer>
+
+</body>
+</html>
