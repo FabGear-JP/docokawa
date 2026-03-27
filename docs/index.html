@@ -78,6 +78,14 @@
       background: #d35400;
       text-decoration: none;
     }
+    .btn-dl-sub {
+      background: #555;
+      font-size: 15px;
+      padding: 12px 36px;
+    }
+    .btn-dl-sub:hover {
+      background: #444;
+    }
 
     /* ===== ヘッダー ===== */
     header {
@@ -367,7 +375,7 @@
      onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'header'});}">
     ダウンロード（Windows / 無料）
   </a>
-  <div class="sub-note">インストール不要 · ネット接続不要 · ZIP展開するだけ</div>
+  <div class="sub-note">ネット接続不要 · インストーラー版 / ZIP版を選べます</div>
 </header>
 
 <!-- 課題提示 -->
@@ -469,13 +477,19 @@
 <div class="section-download">
   <div class="section-inner">
     <h2>ダウンロード</h2>
-    <p>ZIPを展開して、中のexeを実行するだけ。</p>
+    <p>どちらも中身は同じです。お好きな方をどうぞ。</p>
     <br>
-    <a href="https://github.com/FabGear-JP/docokawa/releases/tag/v1.0" class="btn-dl"
-       onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'download_section'});}">
-      ドコカワ v1.0 をダウンロード
+    <a href="https://github.com/FabGear-JP/docokawa/releases/download/v1.0/docokawa_setup_v1.0.exe" class="btn-dl"
+       onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'installer'});}">
+      インストーラー版（推奨）
     </a>
-    <p class="dl-note">Windows用 &nbsp;·&nbsp; 無料 &nbsp;·&nbsp; ローカル完結</p>
+    <p class="dl-note">実行するだけ &nbsp;·&nbsp; デスクトップにショートカット作成</p>
+    <br>
+    <a href="https://github.com/FabGear-JP/docokawa/releases/download/v1.0/docokawa_v1.0.zip" class="btn-dl btn-dl-sub"
+       onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'zip'});}">
+      ZIP版（展開するだけ）
+    </a>
+    <p class="dl-note">インストール不要 &nbsp;·&nbsp; USBで持ち運べる</p>
     <div class="qiita-link">
       <p>技術的な詳細はQiita記事にまとめています：</p>
       <a href="https://qiita.com/FabGear_JP/items/9880118b15b2d46a1c51">
