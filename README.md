@@ -6,8 +6,8 @@ A free desktop tool for mechanical designers to compare two STEP files and detec
 
 - **Part-level diff** — Detects added, removed, and modified parts automatically
 - **Geometry diff** — Reports bounding-box (BBox), volume, and face-count differences per part
-- **3D viewer** — Click a part in the diff table to highlight it in the 3D view
-- **DfM warnings** — Flags thin walls, deep holes, and sharp edges
+- **3D viewer** — Compare before/after shapes side by side in 3D (front, top, side, isometric views)
+- **DfM warnings** — Detects thin walls via face-pair distance analysis (experimental)
 - **Spec check** — Cross-references STEP dimensions against a PDF spec sheet
 - **CSV / Excel export**
 
