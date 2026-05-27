@@ -1,9 +1,5 @@
-# BOM自動抽出ツール - Streamlit Cloud用
+# 部品リスト抽出ツール（簡易版）- Streamlit Cloud用
+# CadQuery不要（テキスト解析のみ）
 
-# CadQuery (pip wheel)
-cadquery-ocp
-cadquery
-
-# Streamlitアプリ
 streamlit>=1.30.0
 pandas>=2.0.0
