@@ -24,7 +24,7 @@ STEPファイルから部品表を自動生成。
 - 多言語対応（日本語・中国語）
 - Webデモあり（インストール不要）
 
-**Webデモ**: [Streamlit Cloud](https://fabgear-bom.streamlit.app/) ※準備中
+**Webデモ**: [Streamlit Cloud](https://docokawa-3tamcfxd9wsaq3bvxfxauw.streamlit.app/)
 
 **ローカル実行**:
 ```bash
@@ -83,6 +83,6 @@ Auto-generate a parts list from STEP files.
 - Multi-language support (Japanese, Chinese)
 - Web demo available
 
-**Web Demo**: [Streamlit Cloud](https://fabgear-bom.streamlit.app/) ※Coming soon
+**Web Demo**: [Streamlit Cloud](https://docokawa-3tamcfxd9wsaq3bvxfxauw.streamlit.app/)
 
 ⚠️ **Note**: MVP version — quantities are approximate. Not for ordering.
