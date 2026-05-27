@@ -2,6 +2,8 @@
 
 製造業設計者向けのSTEPファイルツール集
 
+**メインサイト**: [ドコカワ LP](https://fabgear-jp.github.io/docokawa/) | [FabGear ポートフォリオ](https://fabgear-jp.github.io/)
+
 ## ツール一覧
 
 ### 1. ドコカワ（STEP差分比較）

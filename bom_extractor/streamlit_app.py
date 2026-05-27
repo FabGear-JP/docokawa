@@ -244,7 +244,8 @@ else:
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center'>
-    <p>開発: <a href='https://github.com/FabGear-JP'>FabGear</a> |
-    関連ツール: <a href='https://github.com/FabGear-JP/docokawa'>ドコカワ（STEP差分比較）</a></p>
+    <p><a href='https://fabgear-jp.github.io/docokawa/'>ドコカワ LP</a> |
+    <a href='https://fabgear-jp.github.io/'>FabGear</a> |
+    <a href='https://github.com/FabGear-JP/docokawa'>GitHub</a></p>
 </div>
 """, unsafe_allow_html=True)
