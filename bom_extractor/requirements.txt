@@ -1,13 +1,9 @@
-# BOM自動抽出ツール - 必要なパッケージ
+# BOM自動抽出ツール - Streamlit Cloud用
 
-# Core
-cadquery>=2.7.0
+# CadQuery (pip wheel)
+cadquery-ocp
+cadquery
 
-# Streamlitデモアプリ（オプション）
+# Streamlitアプリ
 streamlit>=1.30.0
 pandas>=2.0.0
-
-# 既存のstep_parser.pyの依存関係（参考）
-# pdfplumber>=0.11.0  # PDF解析機能を使う場合のみ
-# pyvista>=0.43.0     # 3D表示機能を使う場合のみ
-# stpyvista>=0.3.0    # 3D表示機能を使う場合のみ
