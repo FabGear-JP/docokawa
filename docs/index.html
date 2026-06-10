@@ -395,6 +395,129 @@
       color: #fff;
     }
 
+    /* ===== 職種フォーム ===== */
+    .section-role-form {
+      background: #fff;
+    }
+    .role-form-wrap {
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      padding: 24px 20px;
+      background: #fafafa;
+      margin-top: 4px;
+    }
+    .role-form-note {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 18px;
+    }
+    .role-form-label {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #333;
+    }
+    .role-form-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .role-btn {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 7px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s;
+      color: #333;
+    }
+    .role-btn:hover {
+      border-color: #e67e22;
+      background: #fff8f2;
+    }
+    .role-btn.selected {
+      border-color: #e67e22;
+      background: #e67e22;
+      color: #fff;
+    }
+    .role-form-skip {
+      font-size: 12px;
+      color: #aaa;
+      cursor: pointer;
+      text-decoration: underline;
+      background: none;
+      border: none;
+      padding: 0;
+      margin-top: 4px;
+    }
+    .role-form-skip:hover {
+      color: #888;
+    }
+    .role-form-thanks {
+      font-size: 14px;
+      color: #555;
+      padding: 12px 0;
+      display: none;
+    }
+
+    /* ===== 価格フェイクドア ===== */
+    .section-fakedoor {
+      background: #f7f7f7;
+    }
+    .fakedoor-note {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+    .fakedoor-price {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 20px;
+    }
+    .fakedoor-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .fakedoor-btn {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 9px 18px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s;
+      color: #333;
+    }
+    .fakedoor-btn:hover {
+      border-color: #1a1a2e;
+      background: #f0f2f5;
+    }
+    .fakedoor-btn.clicked {
+      border-color: #1a1a2e;
+      background: #1a1a2e;
+      color: #fff;
+      cursor: default;
+    }
+    .fakedoor-disclaimer {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 8px;
+    }
+    .fakedoor-feedback {
+      font-size: 13px;
+      color: #555;
+      margin-top: 10px;
+      display: none;
+      padding: 10px 14px;
+      background: #fff;
+      border-left: 3px solid #1a1a2e;
+      border-radius: 0 4px 4px 0;
+    }
+
     /* ===== スマホ調整 ===== */
     @media (max-width: 480px) {
       header {
@@ -409,6 +532,15 @@
       }
       .spec-table th {
         width: 40%;
+      }
+      .role-form-options,
+      .fakedoor-buttons {
+        flex-direction: column;
+      }
+      .role-btn,
+      .fakedoor-btn {
+        width: 100%;
+        text-align: left;
       }
     }
   </style>
@@ -559,6 +691,61 @@
   </div>
 </div>
 
+<!-- 職種フォーム（DLボタン直後・任意） -->
+<div class="section-role-form">
+  <div class="section-inner">
+    <div class="role-form-wrap" id="roleFormWrap">
+      <p class="role-form-note">（任意）使い方を教えていただけると改善に役立ちます。30秒で終わります。</p>
+
+      <!-- 設問1: 立場 -->
+      <div class="role-form-label">Q1. 立場を教えてください（1つ）</div>
+      <div class="role-form-options" id="roleQ1">
+        <button type="button" class="role-btn" data-q="1" data-val="A_mechanical" onclick="selectRole(this)">機械設計 / CAD担当</button>
+        <button type="button" class="role-btn" data-q="1" data-val="B_software" onclick="selectRole(this)">ソフト開発 / プログラミング</button>
+        <button type="button" class="role-btn" data-q="1" data-val="C_student" onclick="selectRole(this)">学生</button>
+        <button type="button" class="role-btn" data-q="1" data-val="D_other" onclick="selectRole(this)">その他</button>
+      </div>
+
+      <!-- 設問2-a: 主な動機（単一選択） -->
+      <div class="role-form-label">Q2a. 主な動機を1つ選んでください</div>
+      <div class="role-form-options" id="roleQ2a">
+        <button type="button" class="role-btn" data-q="2a" data-val="P_review" onclick="selectRole(this)">修正ファイルのどこが変わったか確認したい</button>
+        <button type="button" class="role-btn" data-q="2a" data-val="Q_script" onclick="selectRole(this)">STEPを扱うスクリプトを作っている</button>
+        <button type="button" class="role-btn" data-q="2a" data-val="R_research" onclick="selectRole(this)">STEP / 3Dの扱いを調べていた</button>
+        <button type="button" class="role-btn" data-q="2a" data-val="S_other" onclick="selectRole(this)">その他</button>
+      </div>
+
+      <!-- 設問2-b: 当てはまるもの全て（複数選択） -->
+      <div class="role-form-label">Q2b. 当てはまるものをすべて選んでください（複数可）</div>
+      <div class="role-form-options" id="roleQ2b">
+        <button type="button" class="role-btn" data-q="2b" data-val="P_review" onclick="selectMulti(this)">修正ファイルのどこが変わったか確認したい</button>
+        <button type="button" class="role-btn" data-q="2b" data-val="Q_script" onclick="selectMulti(this)">STEPを扱うスクリプトを作っている</button>
+        <button type="button" class="role-btn" data-q="2b" data-val="R_research" onclick="selectMulti(this)">STEP / 3Dの扱いを調べていた</button>
+        <button type="button" class="role-btn" data-q="2b" data-val="S_other" onclick="selectMulti(this)">その他</button>
+      </div>
+
+      <button type="button" class="role-form-skip" onclick="skipRoleForm()">スキップ</button>
+      <div class="role-form-thanks" id="roleFormThanks">ありがとうございます。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 価格フェイクドア -->
+<div class="section-fakedoor">
+  <div class="section-inner">
+    <h2>検討中の機能</h2>
+    <p class="fakedoor-note">開発を検討しているものです。興味があればクリックして教えてください（購入は発生しません）。</p>
+    <p class="fakedoor-price">将来の有料プランとして検討中の価格帯: 月1,000円 / 月2,000円 / 月5,000円 / 年9,800円</p>
+    <div class="fakedoor-buttons">
+      <button type="button" class="fakedoor-btn" data-feature="pdf_export" data-price="1000" onclick="recordFakedoor(this)">PDF出力に興味あり</button>
+      <button type="button" class="fakedoor-btn" data-feature="bom_extraction" data-price="1000" onclick="recordFakedoor(this)">BOM自動抽出の拡張に興味あり</button>
+      <button type="button" class="fakedoor-btn" data-feature="team_share" data-price="2000" onclick="recordFakedoor(this)">社内共有・チーム利用に興味あり</button>
+    </div>
+    <p class="fakedoor-disclaimer">クリックで購入は発生しません。開発優先度の参考にします。</p>
+    <div class="fakedoor-feedback" id="fakedoorFeedback">ありがとうございます。検討中の機能です。</div>
+  </div>
+</div>
+
 <!-- フィードバック -->
 <div id="feedback" class="section-feedback">
   <div class="section-inner">
@@ -597,6 +784,84 @@
   </div>
   <p>設備設計者が自分用に作ったツールです。</p>
 </footer>
+
+
+<script>
+  /* =============================
+     職種フォーム — GA4イベント送信
+     ============================= */
+
+  // Q1・Q2a: 単一選択
+  function selectRole(btn) {
+    var q = btn.getAttribute('data-q');
+    var val = btn.getAttribute('data-val');
+
+    // 同じ設問内の選択を外す
+    var siblings = document.querySelectorAll('.role-btn[data-q="' + q + '"]');
+    siblings.forEach(function(b) { b.classList.remove('selected'); });
+    btn.classList.add('selected');
+
+    // GA4イベント送信
+    var eventName = (q === '1') ? 'form_role' : 'form_motive_main';
+    if (typeof gtag !== 'undefined') {
+      gtag('event', eventName, { value: val });
+    }
+
+    maybeShowThanks();
+  }
+
+  // Q2b: 複数選択（トグル）
+  function selectMulti(btn) {
+    var val = btn.getAttribute('data-val');
+    btn.classList.toggle('selected');
+
+    // 選択中の全valを収集してGA4送信
+    var selected = [];
+    document.querySelectorAll('.role-btn[data-q="2b"].selected').forEach(function(b) {
+      selected.push(b.getAttribute('data-val'));
+    });
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'form_motive_multi', { value: selected.join(',') });
+    }
+
+    maybeShowThanks();
+  }
+
+  function maybeShowThanks() {
+    var q1 = document.querySelector('.role-btn[data-q="1"].selected');
+    var q2a = document.querySelector('.role-btn[data-q="2a"].selected');
+    if (q1 && q2a) {
+      document.getElementById('roleFormThanks').style.display = 'block';
+    }
+  }
+
+  function skipRoleForm() {
+    document.getElementById('roleFormWrap').style.display = 'none';
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'form_role_skip');
+    }
+  }
+
+  /* =============================
+     価格フェイクドア — GA4イベント送信
+     ============================= */
+
+  function recordFakedoor(btn) {
+    if (btn.classList.contains('clicked')) return; // 二重クリック防止
+    var feature = btn.getAttribute('data-feature');
+    var price = btn.getAttribute('data-price');
+    btn.classList.add('clicked');
+
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'fake_door_click', {
+        feature_name: feature,
+        price_tier: price
+      });
+    }
+
+    document.getElementById('fakedoorFeedback').style.display = 'block';
+  }
+</script>
 
 </body>
 </html>
