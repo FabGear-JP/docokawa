@@ -461,6 +461,26 @@
       padding: 12px 0;
       display: none;
     }
+    .role-form-text-input {
+      width: 100%;
+      max-width: 480px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #333;
+      margin-top: 6px;
+      margin-bottom: 4px;
+      font-family: inherit;
+    }
+    .role-form-text-input:focus {
+      outline: none;
+      border-color: #e67e22;
+    }
+    .role-form-text-hint {
+      font-size: 12px;
+      color: #aaa;
+    }
 
     /* ===== 価格フェイクドア ===== */
     .section-fakedoor {
@@ -541,6 +561,9 @@
       .fakedoor-btn {
         width: 100%;
         text-align: left;
+      }
+      .role-form-text-input {
+        max-width: 100%;
       }
     }
   </style>
@@ -724,6 +747,14 @@
         <button type="button" class="role-btn" data-q="2b" data-val="S_other" onclick="selectMulti(this)">その他</button>
       </div>
 
+      <!-- 設問3: 職種自由記述（任意） -->
+      <div class="role-form-label">Q3. 職種・役割を自由に教えてください（任意）</div>
+      <input type="text" class="role-form-text-input" id="roleQ3Text"
+             placeholder="例: 購買、見積、調達、品管 など"
+             maxlength="120"
+             onblur="sendRoleText(this)">
+      <p class="role-form-text-hint">入力は任意・100文字以内。個人が特定される情報は不要です。</p>
+
       <button type="button" class="role-form-skip" onclick="skipRoleForm()">スキップ</button>
       <div class="role-form-thanks" id="roleFormThanks">ありがとうございます。</div>
     </div>
@@ -833,6 +864,18 @@
     if (q1 && q2a) {
       document.getElementById('roleFormThanks').style.display = 'block';
     }
+  }
+
+  // Q3: 職種自由記述 — フォーカスアウト時に送信（空文字・送信済みはスキップ）
+  function sendRoleText(input) {
+    if (input.dataset.sent === '1') return; // 送信済みガード（onblur複数回発火対策）
+    var raw = input.value;
+    var trimmed = raw.trim().substring(0, 100); // GA4パラメータ上限100文字
+    if (trimmed.length === 0) return;
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'form_role_text', { value: trimmed });
+    }
+    input.dataset.sent = '1'; // 送信完了フラグ
   }
 
   function skipRoleForm() {
