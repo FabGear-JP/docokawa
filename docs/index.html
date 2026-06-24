@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- SEO: タイトルと説明文 -->
+  <!-- SEO -->
   <title>ドコカワ — STEP図面の変更箇所を自動検出する無料ツール | FabGear</title>
   <meta name="description" content="設変後のSTEPファイル、どこが変わったか目視してませんか。ドコカワはSTEP同士を比較して変更箇所を自動で一覧表示します。Windows用デスクトップアプリ、無料。">
   <meta name="keywords" content="STEP 図面比較, 設計変更 確認, CAD 差分, 機械設計 ツール, STEP ファイル 比較, 設変確認, STEP差分チェック, フリーソフト">
@@ -12,20 +12,20 @@
   <!-- Canonical URL -->
   <link rel="canonical" href="https://fabgear-jp.github.io/docokawa/">
 
-  <!-- OGP: SNSでシェアされたときのカード表示 -->
+  <!-- OGP -->
   <meta property="og:title" content="ドコカワ — STEP図面の変更箇所を自動検出">
   <meta property="og:description" content="設変後のSTEPを比較して変更箇所を一覧表示。無料、ローカル完結。">
   <meta property="og:url" content="https://fabgear-jp.github.io/docokawa/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="FabGear">
   <meta property="og:image" content="https://fabgear-jp.github.io/docokawa/screenshot.png">
-  <meta name="twitter:image" content="https://fabgear-jp.github.io/docokawa/screenshot.png">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@FabGear_jp">
   <meta name="twitter:title" content="ドコカワ — STEP図面の変更箇所を自動検出">
   <meta name="twitter:description" content="設変後のSTEPを比較して変更箇所を一覧表示。無料、ローカル完結。">
+  <meta name="twitter:image" content="https://fabgear-jp.github.io/docokawa/screenshot.png">
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-CXLV7Q8QMM"></script>
@@ -45,434 +45,714 @@
     })();
   </script>
 
+  <!-- Google Fonts（既存ブランドと同一） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
   <style>
+    /* ===== カラー変数（docokawa / fabgear-hub / air-cylinder と同一） ===== */
+    :root {
+      --bg:           #f5f3f0;
+      --bg-2:         #eae7e2;
+      --bg-3:         #e0ddd7;
+      --amber:        #e05a00;
+      --amber-dim:    #c04800;
+      --amber-glow:   rgba(224,90,0,0.12);
+      --cyan:         #1a8a82;
+      --cyan-dim:     #157a72;
+      --cyan-glow:    rgba(26,138,130,0.12);
+      --ink:          #1a1a1f;
+      --gray-1:       #4a4a55;
+      --gray-2:       #8a8a98;
+      --gray-3:       #d0cdc7;
+      --grid-line:    rgba(26,138,130,0.07);
+      --border:       rgba(26,138,130,0.2);
+      --border-amber: rgba(224,90,0,0.3);
+    }
+
     /* ===== リセット ===== */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
+    html { scroll-behavior: smooth; }
 
-    /* ===== ベース ===== */
     body {
-      font-family: "Hiragino Kaku Gothic ProN", "Meiryo", "Noto Sans JP", sans-serif;
-      color: #222;
-      background: #fff;
+      font-family: "Noto Sans JP", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
       line-height: 1.75;
       font-size: 16px;
-    }
-    a {
-      color: #0066cc;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    img {
-      max-width: 100%;
-      height: auto;
-      display: block;
+      /* 方眼紙グリッド背景（既存と同一） */
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(rgba(78,205,196,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(78,205,196,0.025) 1px, transparent 1px);
+      background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
+      background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
     }
 
-    /* ===== ボタン ===== */
-    .btn-dl {
-      display: inline-block;
-      background: #e67e22;
-      color: #fff;
-      text-decoration: none;
-      padding: 16px 44px;
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 5px;
-      letter-spacing: 0.02em;
-      transition: background 0.15s;
+    a { color: var(--cyan); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--ink); }
+
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* ===== フェードイン ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
     }
-    .btn-dl:hover {
-      background: #d35400;
-      text-decoration: none;
-    }
-    .btn-dl-sub {
-      background: #555;
-      font-size: 15px;
-      padding: 12px 36px;
-    }
-    .btn-dl-sub:hover {
-      background: #444;
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    /* ===== ナビバー ===== */
+    /* ===== ナビバー（既存と同一） ===== */
     .site-nav {
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: #1a1a2e;
+      background: rgba(245,243,240,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 24px;
+      padding: 0 28px;
+      height: 52px;
     }
-    .site-nav .nav-logo {
-      color: #fff;
-      font-size: 15px;
-      font-weight: bold;
-      letter-spacing: 2px;
+    .nav-logo {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      text-decoration: none;
     }
-    .site-nav .nav-links {
+    .nav-logo::before { content: "// "; color: var(--gray-2); font-size: 11px; }
+    .nav-logo:hover { color: var(--ink); }
+    .nav-links {
       display: flex;
-      gap: 24px;
+      gap: 28px;
     }
-    .site-nav .nav-links a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 14px;
-      transition: color 0.15s;
+    .nav-links a {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gray-1);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
-    .site-nav .nav-links a:hover {
-      color: #e67e22;
-      text-decoration: none;
-    }
+    .nav-links a:hover { color: var(--amber); }
 
-    /* ===== ヘッダー ===== */
+    /* ===== ヒーロー ===== */
     header {
-      background: #1a1a2e;
-      color: #fff;
-      padding: 64px 20px 56px;
-      text-align: center;
-    }
-    header h1 {
-      font-size: clamp(32px, 8vw, 52px);
-      font-weight: bold;
-      margin-bottom: 18px;
-      letter-spacing: 0.05em;
-    }
-    header .tagline {
-      font-size: clamp(16px, 4vw, 20px);
-      color: #bbb;
-      margin-bottom: 36px;
-      line-height: 1.6;
-    }
-    header .sub-note {
-      font-size: 13px;
-      color: #777;
-      margin-top: 14px;
-      letter-spacing: 0.05em;
-    }
-
-    /* ===== セクション共通 ===== */
-    .section-inner {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 64px 20px;
-    }
-    .section-inner h2 {
-      font-size: clamp(20px, 5vw, 26px);
-      font-weight: bold;
-      margin-bottom: 28px;
-      border-left: 4px solid #e67e22;
-      padding-left: 14px;
-      line-height: 1.4;
-    }
-    .section-inner p {
-      margin-bottom: 16px;
-    }
-
-    /* ===== 課題セクション ===== */
-    .section-problem {
-      background: #f7f7f7;
-    }
-    .pain-list {
-      list-style: none;
-      padding: 0;
-      margin-bottom: 24px;
-    }
-    .pain-list li {
-      padding: 12px 0 12px 28px;
-      border-bottom: 1px solid #e8e8e8;
       position: relative;
-      font-size: 15px;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 96px 24px 64px;
+      overflow: hidden;
     }
-    .pain-list li:first-child {
-      border-top: 1px solid #e8e8e8;
-    }
-    .pain-list li::before {
-      content: "→";
+    header::before,
+    header::after {
+      content: "";
       position: absolute;
-      left: 0;
-      color: #e67e22;
-      font-weight: bold;
+      width: 32px;
+      height: 32px;
+      border-color: var(--amber);
+      border-style: solid;
     }
-    .solution-text {
-      background: #fff;
-      border-left: 3px solid #e67e22;
-      padding: 16px 20px;
-      font-size: 15px;
-      border-radius: 0 4px 4px 0;
-    }
+    header::before { top: 72px; left: 0; border-width: 2px 0 0 2px; }
+    header::after  { bottom: 32px; right: 0; border-width: 0 2px 2px 0; }
 
-    /* ===== 機能紹介 ===== */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      margin-top: 8px;
+    .hero-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      color: var(--amber);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
     }
-    .feature-card {
-      border: 1px solid #e0e0e0;
-      padding: 22px 20px;
-      border-radius: 5px;
-      background: #fff;
-    }
-    .feature-card h3 {
-      font-size: 15px;
-      font-weight: bold;
-      margin-bottom: 8px;
-      color: #1a1a2e;
-    }
-    .feature-card p {
-      font-size: 13px;
-      color: #555;
-      margin: 0;
-      line-height: 1.6;
-    }
+    .hero-label::before { content: "TOOL_01 // "; }
 
-    /* ===== スクショ ===== */
-    .section-screenshots {
-      background: #eef2f7;
+    header h1 {
+      font-family: "JetBrains Mono", monospace;
+      font-size: clamp(32px, 7vw, 60px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 6px;
+      color: var(--ink);
     }
-    .screenshot-block {
+    .h1-accent {
+      display: inline-block;
+      background: var(--amber);
+      height: 3px;
+      width: 64px;
       margin-bottom: 32px;
     }
-    .screenshot-block:last-child {
-      margin-bottom: 0;
+
+    .hero-tagline {
+      font-size: clamp(14px, 2.8vw, 17px);
+      color: var(--gray-1);
+      line-height: 1.85;
+      max-width: 480px;
+      margin-bottom: 40px;
     }
-    .screenshot-placeholder {
-      background: #d8e0ea;
-      border: 2px dashed #aab8c8;
-      border-radius: 5px;
-      height: 280px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #7a8fa6;
-      font-size: 14px;
-      margin-bottom: 8px;
-    }
-    .screenshot-caption {
+    .hero-tagline strong { color: var(--ink); font-weight: 700; }
+
+    /* CTAボタン */
+    .btn-dl {
+      font-family: "JetBrains Mono", monospace;
+      display: inline-block;
+      background: var(--amber);
+      color: #fff;
+      padding: 15px 40px;
       font-size: 13px;
-      color: #666;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: background 0.15s, box-shadow 0.15s;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+    .btn-dl:hover {
+      background: #ff8533;
+      box-shadow: 0 0 24px rgba(224,90,0,0.3);
+      color: #fff;
     }
 
-    /* ===== スペック ===== */
+    .sub-note {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      color: var(--gray-2);
+      letter-spacing: 0.06em;
+      margin-top: 20px;
+    }
+    .sub-note::before { content: "// "; }
+
+    /* ===== 本物スクショ セクション ===== */
+    .section-wrap { border-top: 1px solid var(--border); }
+    .section-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .section-num {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      color: var(--amber);
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+    }
+    .section-heading h2 {
+      font-family: "JetBrains Mono", monospace;
+      font-size: clamp(16px, 3.5vw, 22px);
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+    }
+    .section-heading::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      min-width: 20px;
+    }
+
+    /* ===== スクショエリア ===== */
+    .section-screenshot { background: var(--bg-2); }
+
+    .screenshot-lead {
+      font-size: 15px;
+      color: var(--gray-1);
+      line-height: 1.8;
+      margin-bottom: 36px;
+      max-width: 560px;
+    }
+
+    /* メインスクショ（差分テーブル+形状比較ビュー） */
+    .screenshot-main {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    /* ウィンドウバー風 */
+    .screenshot-topbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      background: var(--bg-3);
+      border-bottom: 1px solid var(--border);
+    }
+    .screenshot-topbar-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gray-3);
+    }
+    .screenshot-topbar-title {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      color: var(--gray-2);
+      letter-spacing: 0.1em;
+      margin-left: 6px;
+    }
+
+    .screenshot-img-wrap {
+      position: relative;
+      background: #0d0d0d;
+      overflow: hidden;
+    }
+    .screenshot-img-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+
+    /* アノテーション（吹き出し的なオーバーレイラベル） */
+    .annotation-bar {
+      display: flex;
+      gap: 0;
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .annotation-item {
+      flex: 1;
+      padding: 14px 18px;
+      border-right: 1px solid rgba(26,138,130,0.1);
+    }
+    .annotation-item:last-child { border-right: none; }
+    .annotation-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 9px;
+      color: var(--amber);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .annotation-text {
+      font-size: 12px;
+      color: var(--gray-1);
+      line-height: 1.55;
+    }
+
+    /* サブスクショ（3D比較） */
+    .screenshot-sub-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .screenshot-sub {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      overflow: hidden;
+    }
+    .screenshot-sub .screenshot-img-wrap { background: #0d0d0d; }
+    .screenshot-sub-label {
+      padding: 10px 14px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      color: var(--gray-2);
+      letter-spacing: 0.1em;
+      background: var(--bg-3);
+      border-bottom: 1px solid var(--border);
+    }
+    .screenshot-sub-caption {
+      padding: 12px 14px;
+      font-size: 12px;
+      color: var(--gray-1);
+      line-height: 1.5;
+      border-top: 1px solid rgba(26,138,130,0.08);
+    }
+
+    .screenshot-caption {
+      margin-top: 16px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      color: var(--gray-2);
+      letter-spacing: 0.06em;
+      line-height: 1.7;
+    }
+    .screenshot-caption::before { content: "// "; }
+
+    /* ===== 課題セクション ===== */
+    .section-problem { background: var(--bg); }
+
+    .pain-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+    }
+    .pain-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(26,138,130,0.1);
+      background: var(--bg);
+      transition: background 0.15s;
+    }
+    .pain-item:last-child { border-bottom: none; }
+    .pain-item:hover { background: var(--bg-2); }
+    .pain-arrow {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 13px;
+      color: var(--amber);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .pain-text {
+      font-size: 15px;
+      color: var(--gray-1);
+      line-height: 1.7;
+    }
+
+    .solution-strip {
+      margin-top: 32px;
+      padding: 24px;
+      background: var(--bg-2);
+      border-left: 3px solid var(--cyan);
+    }
+    .solution-strip-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 9px;
+      color: var(--cyan-dim);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .solution-strip p {
+      font-size: 15px;
+      color: var(--gray-1);
+      line-height: 1.75;
+    }
+    .solution-strip strong { color: var(--ink); font-weight: 700; }
+
+    /* ===== 機能 ===== */
+    .section-features { background: var(--bg-2); }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+    }
+    .feature-row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 0;
+      border-bottom: 1px solid rgba(26,138,130,0.1);
+      background: var(--bg);
+      transition: background 0.15s;
+    }
+    .feature-row:last-child { border-bottom: none; }
+    .feature-row:hover { background: var(--bg-3); }
+    .feature-key {
+      padding: 22px 24px;
+      border-right: 1px solid rgba(26,138,130,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .feature-key-num {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 9px;
+      color: var(--gray-2);
+      letter-spacing: 0.15em;
+    }
+    .feature-key-name {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--amber);
+      letter-spacing: 0.02em;
+    }
+    .feature-val {
+      padding: 22px 24px;
+      font-size: 14px;
+      color: var(--gray-1);
+      line-height: 1.7;
+    }
+
+    .features-note {
+      margin-top: 20px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      color: var(--gray-2);
+      line-height: 1.6;
+    }
+    .features-note::before { content: "// "; }
+
+    /* ===== 仕様テーブル ===== */
+    .section-spec { background: var(--bg); }
+
     .spec-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 14px;
-      margin-top: 8px;
+      font-size: 13px;
+      font-family: "JetBrains Mono", monospace;
     }
-    .spec-table th,
-    .spec-table td {
-      border: 1px solid #ddd;
-      padding: 11px 16px;
+    .spec-table tr {
+      border-bottom: 1px solid var(--gray-3);
+      transition: background 0.15s;
+    }
+    .spec-table tr:first-child { border-top: 1px solid var(--gray-3); }
+    .spec-table tr:hover { background: var(--bg-2); }
+    .spec-table th {
+      padding: 14px 20px;
       text-align: left;
       vertical-align: top;
-    }
-    .spec-table th {
-      background: #f2f2f2;
-      font-weight: bold;
       width: 36%;
-      color: #333;
+      color: var(--gray-2);
+      letter-spacing: 0.06em;
+      font-weight: 500;
     }
-    .spec-table tr:nth-child(even) td {
-      background: #fafafa;
+    .spec-table td {
+      padding: 14px 20px;
+      text-align: left;
+      vertical-align: top;
+      color: var(--ink);
     }
 
-    /* ===== ダウンロードセクション ===== */
-    .section-download {
-      background: #1a1a2e;
-      color: #fff;
+    /* ===== ダウンロード ===== */
+    .section-download { background: var(--bg-2); }
+
+    .dl-blocks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 32px;
     }
-    .section-download .section-inner {
-      text-align: center;
+    .dl-block {
+      background: var(--bg);
+      padding: 32px 28px;
+      transition: background 0.2s;
     }
-    .section-download h2 {
-      color: #fff;
-      border-left-color: #e67e22;
+    .dl-block:hover { background: var(--bg-3); }
+    .dl-block-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      color: var(--gray-2);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
     }
-    .section-download p {
-      color: #bbb;
+    .dl-block-title {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .dl-block-note {
+      font-size: 13px;
+      color: var(--gray-1);
+      margin-bottom: 24px;
+      line-height: 1.65;
+    }
+    .btn-dl-sub {
+      font-family: "JetBrains Mono", monospace;
+      display: inline-block;
+      background: transparent;
+      color: var(--gray-1);
+      padding: 13px 32px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 1px solid var(--gray-2);
+      transition: border-color 0.15s, color 0.15s, box-shadow 0.15s;
+      clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    }
+    .btn-dl-sub:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      box-shadow: 0 0 16px rgba(78,205,196,0.2);
     }
     .dl-note {
-      margin-top: 14px;
-      font-size: 13px;
-      color: #777;
-    }
-    .qiita-link {
-      margin-top: 32px;
-      font-size: 14px;
-      color: #aaa;
-      border-top: 1px solid #333;
-      padding-top: 28px;
-    }
-    .qiita-link a {
-      color: #88aacc;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      color: var(--gray-2);
+      margin-top: 12px;
+      letter-spacing: 0.04em;
     }
 
-    /* ===== フィードバックセクション ===== */
-    .section-feedback {
-      background: #f7f7f7;
+    .smartscreen-note {
+      background: var(--bg-3);
+      border-left: 3px solid var(--amber);
+      padding: 20px 24px;
+      margin-bottom: 32px;
     }
+    .smartscreen-note-title {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .smartscreen-note-body {
+      font-size: 13px;
+      color: var(--gray-1);
+      line-height: 1.75;
+    }
+
+    .qiita-link { padding: 24px 0; border-top: 1px solid var(--gray-3); }
+    .qiita-link p {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      color: var(--gray-2);
+      margin-bottom: 8px;
+      letter-spacing: 0.04em;
+    }
+    .qiita-list { list-style: none; padding: 0; margin: 0; }
+    .qiita-list li {
+      padding: 8px 0 8px 20px;
+      position: relative;
+      border-bottom: 1px solid var(--gray-3);
+    }
+    .qiita-list li:first-child { border-top: 1px solid var(--gray-3); }
+    .qiita-list li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--cyan);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+    }
+    .qiita-list a { font-size: 14px; color: var(--cyan); }
+    .qiita-list a:hover { color: var(--ink); }
+
+    /* ===== フィードバック ===== */
+    .section-feedback { background: var(--bg); }
     .feedback-methods {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-      margin-top: 8px;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
     }
     .feedback-card {
-      background: #fff;
-      border: 1px solid #e0e0e0;
-      border-radius: 5px;
-      padding: 22px 20px;
+      background: var(--bg);
+      padding: 28px 24px;
+      transition: background 0.2s;
     }
+    .feedback-card:hover { background: var(--bg-3); }
     .feedback-card h3 {
-      font-size: 14px;
-      font-weight: bold;
-      color: #555;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--amber);
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .feedback-card p {
-      font-size: 14px;
-      color: #444;
-      margin-bottom: 14px;
+      font-size: 13px;
+      color: var(--gray-1);
+      margin-bottom: 20px;
+      line-height: 1.6;
     }
     .btn-form {
+      font-family: "JetBrains Mono", monospace;
       display: inline-block;
-      background: #1a1a2e;
-      color: #fff;
-      text-decoration: none;
+      background: transparent;
+      color: var(--cyan);
       padding: 10px 24px;
-      font-size: 14px;
-      font-weight: bold;
-      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid var(--cyan-dim);
+      transition: border-color 0.15s, color 0.15s, box-shadow 0.15s;
     }
     .btn-form:hover {
-      background: #2d2d4e;
-      text-decoration: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 14px rgba(78,205,196,0.25);
+      color: var(--ink);
     }
     .mail-link {
-      font-size: 15px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 13px;
       word-break: break-all;
+      color: var(--cyan);
     }
+    .mail-link:hover { color: var(--ink); }
 
     /* ===== フッター ===== */
     footer {
-      background: #111;
-      color: #666;
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--gray-2);
       text-align: center;
-      padding: 28px 20px;
-      font-size: 13px;
+      padding: 32px 24px;
+      font-size: 12px;
       line-height: 2;
+      font-family: "JetBrains Mono", monospace;
     }
-    footer a {
-      color: #999;
-    }
-    footer a:hover {
-      color: #bbb;
-    }
+    footer a { color: var(--gray-2); transition: color 0.15s; }
+    footer a:hover { color: var(--cyan); }
     .footer-links {
       display: flex;
-      gap: 20px;
+      gap: 24px;
       justify-content: center;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
     }
     .footer-links a {
-      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--gray-2);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       transition: color 0.15s;
     }
-    .footer-links a:hover {
-      color: #fff;
-    }
+    .footer-links a:hover { color: var(--cyan); }
+    .footer-copy { color: var(--gray-2); letter-spacing: 0.06em; }
+    .footer-copy::before { content: "// "; }
 
-    /* ===== 価格フェイクドア ===== */
-    .section-fakedoor {
-      background: #f7f7f7;
-    }
-    .fakedoor-note {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 6px;
-    }
-    .fakedoor-price {
-      font-size: 13px;
-      color: #888;
-      margin-bottom: 20px;
-    }
-    .fakedoor-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .fakedoor-btn {
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 9px 18px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: background 0.12s, border-color 0.12s;
-      color: #333;
-    }
-    .fakedoor-btn:hover {
-      border-color: #1a1a2e;
-      background: #f0f2f5;
-    }
-    .fakedoor-btn.clicked {
-      border-color: #1a1a2e;
-      background: #1a1a2e;
-      color: #fff;
-      cursor: default;
-    }
-    .fakedoor-disclaimer {
-      font-size: 12px;
-      color: #aaa;
-      margin-top: 8px;
-    }
-    .fakedoor-feedback {
-      font-size: 13px;
-      color: #555;
-      margin-top: 10px;
-      display: none;
-      padding: 10px 14px;
-      background: #fff;
-      border-left: 3px solid #1a1a2e;
-      border-radius: 0 4px 4px 0;
-    }
-
-    /* ===== スマホ調整 ===== */
-    @media (max-width: 480px) {
+    /* ===== モバイル ===== */
+    @media (max-width: 640px) {
       header {
-        padding: 48px 16px 40px;
+        padding: 64px 20px 48px;
       }
-      .btn-dl {
-        padding: 14px 32px;
-        font-size: 16px;
+      header::before,
+      header::after { display: none; }
+      .section-inner { padding: 56px 20px; }
+      .feature-row {
+        grid-template-columns: 1fr;
       }
-      .section-inner {
-        padding: 48px 16px;
-      }
-      .spec-table th {
-        width: 40%;
-      }
-      .fakedoor-buttons {
-        flex-direction: column;
-      }
-      .fakedoor-btn {
-        width: 100%;
-        text-align: left;
-      }
+      .feature-key { border-right: none; border-bottom: 1px solid rgba(26,138,130,0.1); }
+      .dl-blocks { grid-template-columns: 1fr; }
+      .nav-links { gap: 16px; }
+      .screenshot-sub-wrap { grid-template-columns: 1fr; }
+      .annotation-bar { flex-direction: column; }
+      .annotation-item { border-right: none; border-bottom: 1px solid rgba(26,138,130,0.1); }
+      .annotation-item:last-child { border-bottom: none; }
+    }
+    @media (max-width: 400px) {
+      .btn-dl { padding: 14px 24px; font-size: 12px; }
     }
   </style>
 </head>
@@ -480,20 +760,22 @@
 
 <!-- ナビバー -->
 <nav class="site-nav">
-  <a href="#" class="nav-logo">FabGear</a>
+  <a href="https://fabgear-jp.github.io/" class="nav-logo">FabGear</a>
   <div class="nav-links">
-    <a href="#feedback">お問い合わせ</a>
     <a href="#download">ダウンロード</a>
+    <a href="#feedback">感想・バグ報告</a>
   </div>
 </nav>
 
-<!-- ヘッダー -->
+<!-- ヒーロー -->
 <header>
-  <h1>ドコカワ</h1>
-  <div class="tagline">
-    設変のSTEP、どこ変わったかわからない。<br>
-    困っていたので作りました。
-  </div>
+  <div class="hero-label">ドコカワ</div>
+  <h1>設変のSTEP、<br>どこ変わったかわからない。</h1>
+  <div class="h1-accent"></div>
+  <p class="hero-tagline">
+    困っていたので作りました。<br>
+    STEPを2つ放り込むと、<strong>変更・追加・削除された部品</strong>が一覧で出ます。
+  </p>
   <a href="download.html" class="btn-dl"
      onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'top_to_downloadpage_hero',traffic_source:sessionStorage.getItem('traffic_source')||'direct'});}">
     ダウンロード（Windows / 無料）
@@ -501,73 +783,162 @@
   <div class="sub-note">ネット接続不要 · インストーラー版 / ZIP版を選べます</div>
 </header>
 
-<!-- 課題提示 -->
-<div class="section-problem">
+<!-- 本物スクショ（差分ビュー） -->
+<div class="section-wrap section-screenshot">
   <div class="section-inner">
-    <h2>こういうとき</h2>
-    <ul class="pain-list">
-      <li>「修正しました」とだけ書いてあるSTEPが戻ってきた</li>
-      <li>CADで両方開いて部品を一個ずつ見比べる。50部品あると時間がかかる</li>
-      <li>CADの比較機能、STEPには対応してない</li>
-      <li>結局目視。見落としが怖いまま次工程に流す</li>
-    </ul>
-    <div class="solution-text">
-      STEPを2つ放り込むと、変更・追加・削除された部品が一覧で出ます。
+    <div class="section-heading reveal">
+      <span class="section-num">01 //</span>
+      <h2>実際の画面です</h2>
+    </div>
+
+    <p class="screenshot-lead reveal">
+      これはモックではありません。同じ部品を修正した2つのSTEPを読み込んだときの実際の出力です。
+    </p>
+
+    <!-- メインスクショ: 差分テーブル + 形状比較ビュー -->
+    <div class="screenshot-main reveal">
+      <div class="screenshot-topbar">
+        <div class="screenshot-topbar-dot"></div>
+        <div class="screenshot-topbar-dot"></div>
+        <div class="screenshot-topbar-dot"></div>
+        <span class="screenshot-topbar-title">ドコカワ — 差分チェック結果 + 形状比較ビュー</span>
+      </div>
+      <div class="screenshot-img-wrap">
+        <img src="screenshot1.png" alt="ドコカワ実画面: 差分結果テーブルと形状比較ビュー。左に変更前、右に変更後の形状が並ぶ。" loading="eager">
+      </div>
+      <div class="annotation-bar">
+        <div class="annotation-item">
+          <div class="annotation-label">DIFF TABLE</div>
+          <div class="annotation-text">変更・追加・削除を部品名で一覧表示。BBox差・体積差・面数も確認できる。</div>
+        </div>
+        <div class="annotation-item">
+          <div class="annotation-label">SHAPE COMPARE</div>
+          <div class="annotation-text">変更前(R0)と変更後(R1)の形状を正面・上面・右側面で並べて表示。</div>
+        </div>
+        <div class="annotation-item">
+          <div class="annotation-label">CSV OUTPUT</div>
+          <div class="annotation-text">差分結果をCSV/Excelで出力。設変記録としてそのまま使える。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- サブスクショ: 3Dモデル比較 -->
+    <div class="screenshot-sub-wrap reveal">
+      <div class="screenshot-sub">
+        <div class="screenshot-sub-label">// 上面図・右側面図</div>
+        <div class="screenshot-img-wrap">
+          <img src="screenshot2.png" alt="上面図と右側面図の形状比較。変更前は穴なし、変更後は穴が追加されている。" loading="lazy">
+        </div>
+        <div class="screenshot-sub-caption">2方向の形状を並べて確認できます。</div>
+      </div>
+      <div class="screenshot-sub">
+        <div class="screenshot-sub-label">// 3Dモデル表示（マウスで回転・ズーム可能）</div>
+        <div class="screenshot-img-wrap">
+          <img src="screenshot3.png" alt="3Dモデル比較。左は穴のない直方体(変更前)、右は穴が加工された部品(変更後)。" loading="lazy">
+        </div>
+        <div class="screenshot-sub-caption">変更箇所をクリックすると3Dビューアに切り替わります。</div>
+      </div>
+    </div>
+
+    <p class="screenshot-caption reveal">
+      表示内容は読み込んだSTEPのアセンブリ構成に応じて変わります。複数部品の場合は変更・追加・削除がまとめて一覧に出ます。
+    </p>
+  </div>
+</div>
+
+<!-- こういうとき -->
+<div class="section-wrap section-problem">
+  <div class="section-inner">
+    <div class="section-heading reveal">
+      <span class="section-num">02 //</span>
+      <h2>こういうとき</h2>
+    </div>
+
+    <div class="pain-stack reveal">
+      <div class="pain-item">
+        <span class="pain-arrow">→</span>
+        <span class="pain-text">「修正しました」とだけ書いてあるSTEPが戻ってきた</span>
+      </div>
+      <div class="pain-item">
+        <span class="pain-arrow">→</span>
+        <span class="pain-text">CADで両方開いて部品を一個ずつ見比べる。50部品あると時間がかかる</span>
+      </div>
+      <div class="pain-item">
+        <span class="pain-arrow">→</span>
+        <span class="pain-text">CADの比較機能、STEPには対応してない</span>
+      </div>
+      <div class="pain-item">
+        <span class="pain-arrow">→</span>
+        <span class="pain-text">結局目視。見落としが怖いまま次工程に流す</span>
+      </div>
+    </div>
+
+    <div class="solution-strip reveal">
+      <div class="solution-strip-label">これを解決します</div>
+      <p>STEPを2つ放り込むと、変更・追加・削除された部品が一覧で表示されます。<strong>CADを開かなくて済みます。</strong></p>
     </div>
   </div>
 </div>
 
-<!-- 機能紹介 -->
-<div>
+<!-- 機能（絞った4点） -->
+<div class="section-wrap section-features">
   <div class="section-inner">
-    <h2>何ができるか</h2>
-    <div class="features-grid">
-      <div class="feature-card">
-        <h3>STEP差分チェック</h3>
-        <p>変更・追加・削除を一覧表示。BBox差、体積差、面数の変化も出る。これがメイン機能。</p>
-      </div>
-      <div class="feature-card">
-        <h3>3Dビューア</h3>
-        <p>差分が出た部品をクリックするとブラウザ上で3D表示。回転・ズームできる。</p>
-      </div>
-      <div class="feature-card">
-        <h3>ローカル完結</h3>
-        <p>外部通信なし。STEPは処理後に消える。社外秘でも安心して使える。</p>
-      </div>
-      <div class="feature-card">
-        <h3>CSV / Excel出力</h3>
-        <p>差分結果をExcelに出せる。設変記録としてそのまま使える。</p>
-      </div>
+    <div class="section-heading reveal">
+      <span class="section-num">03 //</span>
+      <h2>何ができるか</h2>
     </div>
-    <p style="margin-top: 16px; font-size: 14px; color: #888;">他にDfM警告（薄壁・深穴の自動検出）、仕様チェック（STEPとPDFの数値突き合わせ）もあります。作り始めたら増えた。</p>
-  </div>
-</div>
 
+    <div class="feature-list reveal">
+      <div class="feature-row">
+        <div class="feature-key">
+          <span class="feature-key-num">FUNC_01</span>
+          <span class="feature-key-name">STEP差分チェック</span>
+        </div>
+        <div class="feature-val">
+          変更・追加・削除を一覧表示します。BBox差、体積差、面数の変化も確認できます。これがメイン機能です。
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-key">
+          <span class="feature-key-num">FUNC_02</span>
+          <span class="feature-key-name">形状比較ビュー</span>
+        </div>
+        <div class="feature-val">
+          変更箇所の部品を正面・上面・右側面の3方向で並べて表示します。上の画像の通りです。
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-key">
+          <span class="feature-key-num">FUNC_03</span>
+          <span class="feature-key-name">3Dビューア</span>
+        </div>
+        <div class="feature-val">
+          差分が出た部品をクリックするとブラウザ上で3D表示されます。回転・ズームも可能です。
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-key">
+          <span class="feature-key-num">FUNC_04</span>
+          <span class="feature-key-name">ローカル完結</span>
+        </div>
+        <div class="feature-val">
+          外部通信はありません。STEPは処理後に消えます。社外秘でも使えます。
+        </div>
+      </div>
+    </div>
 
-<!-- スクショ -->
-<div class="section-screenshots">
-  <div class="section-inner">
-    <h2>画面イメージ</h2>
-    <div class="screenshot-block">
-      <img src="screenshot1.png" alt="ドコカワ 差分チェック結果 — 変更テーブルと3D比較ビュー">
-      <p class="screenshot-caption">変更・追加・削除がテーブルで一覧表示。変更前後の形状を3Dで比較できます</p>
-    </div>
-    <div class="screenshot-block">
-      <img src="screenshot2.png" alt="ドコカワ 形状比較ビュー — 上面図・側面図での変更前後比較">
-      <p class="screenshot-caption">上面図・側面図など複数の視点で変更箇所を確認</p>
-    </div>
-    <div class="screenshot-block">
-      <img src="screenshot3.png" alt="ドコカワ 3Dモデル比較 — 変更前後の形状を3Dで確認">
-      <p class="screenshot-caption">変更前後の3Dモデルを並べて比較</p>
-    </div>
+    <p class="features-note reveal">他にDfM警告（薄壁・深穴の自動検出）、仕様チェック（STEPとPDFの数値突き合わせ）もあります。作り始めたら増えました。</p>
   </div>
 </div>
 
 <!-- 動作環境・仕様 -->
-<div>
+<div class="section-wrap section-spec">
   <div class="section-inner">
-    <h2>動作環境・仕様</h2>
-    <table class="spec-table">
+    <div class="section-heading reveal">
+      <span class="section-num">04 //</span>
+      <h2>動作環境・仕様</h2>
+    </div>
+    <table class="spec-table reveal">
       <tr>
         <th>対応OS</th>
         <td>Windows 10 / 11（64bit）</td>
@@ -597,64 +968,89 @@
 </div>
 
 <!-- ダウンロード -->
-<div id="download" class="section-download">
+<div id="download" class="section-wrap section-download">
   <div class="section-inner">
-    <h2>ダウンロード</h2>
-    <p>ダウンロードページで形式を選んでください。</p>
-    <br>
-    <a href="download.html" class="btn-dl"
-       onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'top_to_downloadpage_installer',traffic_source:sessionStorage.getItem('traffic_source')||'direct'});}">
-      インストーラー版（推奨）
-    </a>
-    <p class="dl-note">実行するだけ &nbsp;·&nbsp; デスクトップにショートカット作成</p>
-    <br>
-    <a href="download.html" class="btn-dl btn-dl-sub"
-       onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'top_to_downloadpage_zip',traffic_source:sessionStorage.getItem('traffic_source')||'direct'});}">
-      ZIP版（展開するだけ）
-    </a>
-    <p class="dl-note">インストール不要 &nbsp;·&nbsp; USBで持ち運べる</p>
-    <div class="qiita-link">
-      <p>技術的な詳細はQiita記事にまとめています：</p>
-      <a href="https://qiita.com/FabGear_JP/items/9880118b15b2d46a1c51">
-        Qiita: 設変のたびに「どこ変わった？」を目視してた話
-      </a>
+    <div class="section-heading reveal">
+      <span class="section-num">05 //</span>
+      <h2>ダウンロード</h2>
+    </div>
+    <p style="font-size:13px; color:var(--gray-1); margin-bottom:32px; font-family:'JetBrains Mono',monospace;">// どちらも中身は同じです。</p>
+
+    <div class="dl-blocks reveal">
+      <div class="dl-block">
+        <p class="dl-block-label">recommended</p>
+        <p class="dl-block-title">インストーラー版</p>
+        <p class="dl-block-note">実行するだけで完了します。デスクトップにショートカットが作成されます。</p>
+        <a href="download.html" class="btn-dl"
+           onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'top_to_downloadpage_installer',traffic_source:sessionStorage.getItem('traffic_source')||'direct'});}">
+          .exe をダウンロード
+        </a>
+        <p class="dl-note">// docokawa_setup_v1.1.exe</p>
+      </div>
+      <div class="dl-block">
+        <p class="dl-block-label">portable</p>
+        <p class="dl-block-title">ZIP版</p>
+        <p class="dl-block-note">インストール不要です。USBで持ち運べます。</p>
+        <a href="download.html" class="btn-dl-sub"
+           onclick="if(typeof gtag!=='undefined'){gtag('event','download_click',{event_category:'cta',event_label:'top_to_downloadpage_zip',traffic_source:sessionStorage.getItem('traffic_source')||'direct'});}">
+          .zip をダウンロード
+        </a>
+        <p class="dl-note">// docokawa_v1.1.zip</p>
+      </div>
+    </div>
+
+    <div class="smartscreen-note reveal">
+      <p class="smartscreen-note-title">// Windows SmartScreen について</p>
+      <p class="smartscreen-note-body">
+        初回起動時に「WindowsによってPCが保護されました」と出ることがあります。<br>
+        「詳細情報」→「実行」で起動できます。<br>
+        個人開発でコード署名がないため表示される警告です。気になる場合はVirusTotal等でご確認ください。
+      </p>
+    </div>
+
+    <div class="qiita-link reveal">
+      <p>// 技術的な詳細はQiita記事にまとめています</p>
+      <ul class="qiita-list">
+        <li>
+          <a href="https://qiita.com/FabGear_JP/items/9880118b15b2d46a1c51">
+            設変のたびに「どこ変わった？」を目視してた話
+          </a>
+        </li>
+        <li>
+          <a href="https://qiita.com/FabGear_JP/items/ba70bb2f8ee5566bb5a6">
+            STEPから部品リストを自動で抜くスクリプトを書いてみた
+          </a>
+        </li>
+        <li>
+          <a href="https://qiita.com/FabGear_JP/items/7052b07d79d21c0dd621">
+            STEPから寸法まで自動で抜いてるPythonライブラリ5つ
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 </div>
 
-<!-- 価格フェイクドア -->
-<div class="section-fakedoor">
+<!-- 感想・バグ報告 -->
+<div id="feedback" class="section-wrap section-feedback">
   <div class="section-inner">
-    <h2>検討中の機能</h2>
-    <p class="fakedoor-note">いまは無料。将来は有料になるかもしれません。もし有料でも使いたい機能があれば教えてください（購入は発生しません）。</p>
-    <div class="fakedoor-buttons">
-      <button type="button" class="fakedoor-btn" data-feature="pdf_export" data-price="1000" onclick="recordFakedoor(this)">PDF出力に興味あり</button>
-      <button type="button" class="fakedoor-btn" data-feature="bom_extraction" data-price="1000" onclick="recordFakedoor(this)">BOM自動抽出の拡張に興味あり</button>
-      <button type="button" class="fakedoor-btn" data-feature="team_share" data-price="2000" onclick="recordFakedoor(this)">社内共有・チーム利用に興味あり</button>
+    <div class="section-heading reveal">
+      <span class="section-num">06 //</span>
+      <h2>感想・バグ報告</h2>
     </div>
-    <p class="fakedoor-disclaimer">クリックで購入は発生しません。開発優先度の参考にします。</p>
-    <div class="fakedoor-feedback" id="fakedoorFeedback">ありがとうございます。検討中の機能です。</div>
-  </div>
-</div>
-
-<!-- フィードバック -->
-<div id="feedback" class="section-feedback">
-  <div class="section-inner">
-    <h2>感想・バグ報告</h2>
-    <p>使ってみて困ったこと、「こうしてほしい」があれば教えてください。</p>
-    <div class="feedback-methods">
+    <p style="font-size:15px; color:var(--gray-1); margin-bottom:32px;" class="reveal">
+      お使いになって困ったこと、「こうしてほしい」があればお聞かせください。
+    </p>
+    <div class="feedback-methods reveal">
       <div class="feedback-card">
         <h3>Googleフォーム</h3>
-        <p>匿名で送れます。1分で終わります。</p>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLScL1l5PX2rqogBOfeevneWZx0f7Pjg7IJsOoGRPPwHXK8zh2Q/viewform" class="btn-form"
-           onclick="if(typeof gtag!=='undefined'){gtag('event','feedback_click',{event_category:'engagement',event_label:'google_form',traffic_source:sessionStorage.getItem('traffic_source')||'direct'});}">フォームで送る</a>
+        <p>匿名でお送りいただけます。1分で完了します。</p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLScL1l5PX2rqogBOfeevneWZx0f7Pjg7IJsOoGRPPwHXK8zh2Q/viewform" class="btn-form">フォームで送る</a>
       </div>
       <div class="feedback-card">
         <h3>メール</h3>
-        <p>詳しく伝えたい場合はメールでどうぞ。</p>
-        <p class="mail-link">
-          <a href="mailto:fabgear.jp@gmail.com">fabgear.jp@gmail.com</a>
-        </p>
+        <p>詳しくお伝えいただく場合はメールをご利用ください。</p>
+        <a href="mailto:fabgear.jp@gmail.com" class="mail-link">fabgear.jp@gmail.com</a>
       </div>
     </div>
   </div>
@@ -664,40 +1060,42 @@
 <footer>
   <div class="footer-links">
     <a href="https://x.com/FabGear_jp" title="X (Twitter)">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      X
     </a>
     <a href="https://github.com/FabGear-JP" title="GitHub">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      GitHub
     </a>
     <a href="mailto:fabgear.jp@gmail.com" title="メール">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      Mail
     </a>
   </div>
-  <p>設備設計者が自分用に作ったツールです。</p>
+  <p class="footer-copy">設備設計者が自分用に作ったツールです。</p>
+  <p style="margin-top:8px; font-size:11px; font-family:'JetBrains Mono',monospace; letter-spacing:0.06em;">
+    <a href="https://fabgear-jp.github.io/privacy.html" style="color:var(--gray-2); text-decoration:none; transition:color 0.15s;" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='var(--gray-2)'">プライバシーポリシー</a>
+  </p>
 </footer>
 
-
 <script>
-  /* =============================
-     価格フェイクドア — GA4イベント送信
-     ============================= */
-
-  function recordFakedoor(btn) {
-    if (btn.classList.contains('clicked')) return; // 二重クリック防止
-    var feature = btn.getAttribute('data-feature');
-    var price = btn.getAttribute('data-price');
-    btn.classList.add('clicked');
-
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'fake_door_click', {
-        feature_name: feature,
-        price_tier: price,
-        traffic_source: sessionStorage.getItem('traffic_source') || 'direct'
-      });
+  // スクロールフェードイン
+  (function() {
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(function(el) { el.classList.add('visible'); });
+      return;
     }
-
-    document.getElementById('fakedoorFeedback').style.display = 'block';
-  }
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.10, rootMargin: '0px 0px -32px 0px' });
+    els.forEach(function(el) { observer.observe(el); });
+  })();
 </script>
 
 </body>

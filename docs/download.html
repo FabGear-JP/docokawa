@@ -32,287 +32,402 @@
     });
   </script>
 
+  <!-- Google Fonts: 新LP と同一セット -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      font-family: "Hiragino Kaku Gothic ProN", "Meiryo", "Noto Sans JP", sans-serif;
-      color: #222;
-      background: #fff;
-      line-height: 1.75;
-      font-size: 16px;
+    /* ===== デザイントークン（新LP・空圧・看板と共通） ===== */
+    :root {
+      --bg:           #f5f3f0;
+      --bg-2:         #eae7e2;
+      --bg-3:         #e0ddd7;
+      --amber:        #e05a00;
+      --amber-dim:    #c04800;
+      --amber-glow:   rgba(224,90,0,0.12);
+      --cyan:         #1a8a82;
+      --cyan-dim:     #157a72;
+      --cyan-glow:    rgba(26,138,130,0.12);
+      --ink:          #1a1a1f;
+      --gray-1:       #4a4a55;
+      --gray-2:       #8a8a98;
+      --gray-3:       #d0cdc7;
+      --grid-line:    rgba(26,138,130,0.07);
+      --border:       rgba(26,138,130,0.2);
+      --border-amber: rgba(224,90,0,0.3);
     }
-    a { color: #0066cc; }
-    a:hover { text-decoration: underline; }
 
-    /* ===== ナビバー ===== */
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Noto Sans JP", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 40px 40px;
+      line-height: 1.75;
+      font-size: 15px;
+    }
+
+    a { color: var(--cyan); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--ink); }
+
+    /* ===== ナビバー（新LPと同一構造） ===== */
     .site-nav {
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: #1a1a2e;
+      background: rgba(245,243,240,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 24px;
+      padding: 0 32px;
+      height: 52px;
     }
-    .site-nav .nav-logo {
-      color: #fff;
-      font-size: 15px;
-      font-weight: bold;
-      letter-spacing: 2px;
+    .nav-logo {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--cyan);
+      text-decoration: none;
       text-transform: uppercase;
-      text-decoration: none;
     }
-    .site-nav .nav-logo:hover { text-decoration: none; color: #e67e22; }
-    .site-nav .nav-back {
-      color: #bbb;
-      text-decoration: none;
-      font-size: 14px;
+    .nav-logo::before { content: "// "; color: var(--gray-2); font-size: 11px; }
+    .nav-logo:hover { color: var(--ink); }
+    .nav-back {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      color: var(--gray-2);
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
     }
-    .site-nav .nav-back:hover { color: #e67e22; text-decoration: none; }
+    .nav-back:hover { color: var(--amber); }
+    .nav-back::before { content: "← "; }
 
     /* ===== ページヘッダー ===== */
     .dl-page-header {
-      background: #1a1a2e;
-      color: #fff;
-      padding: 48px 20px 40px;
+      padding: 64px 24px 48px;
       text-align: center;
+      border-bottom: 1px solid var(--border);
     }
+    .dl-page-header-tag {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .dl-page-header-tag::before { content: "// "; color: var(--gray-2); }
     .dl-page-header h1 {
-      font-size: clamp(24px, 6vw, 36px);
-      font-weight: bold;
-      margin-bottom: 10px;
-      letter-spacing: 0.05em;
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: 0.04em;
+      margin-bottom: 12px;
     }
     .dl-page-header p {
-      color: #bbb;
-      font-size: 15px;
-      margin: 0;
+      color: var(--gray-1);
+      font-size: 13px;
+      font-family: "JetBrains Mono", monospace;
+      letter-spacing: 0.06em;
     }
 
     /* ===== メインコンテンツ ===== */
     .section-inner {
-      max-width: 800px;
+      max-width: 720px;
       margin: 0 auto;
-      padding: 48px 20px;
+      padding: 56px 24px;
     }
 
-    /* ===== Q1ウィジェット ===== */
-    .dl-q-wrap {
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-      padding: 20px;
-      background: #fafafa;
-      margin-bottom: 28px;
+    /* ===== セクションラベル（新LP準拠） ===== */
+    .block-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      color: var(--amber);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
     }
-    .dl-q-label {
-      font-size: 15px;
-      font-weight: bold;
-      color: #222;
-      margin-bottom: 6px;
+    .block-label::before { content: "// "; color: var(--gray-2); }
+
+    /* ===== DLボタンエリア ===== */
+    .dl-area {
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--amber);
+      background: var(--bg);
+      padding: 40px 32px 36px;
+      margin-bottom: 40px;
     }
-    .dl-q-note {
+    .dl-area-note {
+      color: var(--gray-1);
       font-size: 13px;
-      color: #666;
-      margin-bottom: 14px;
-      line-height: 1.55;
+      margin-bottom: 28px;
+      font-family: "JetBrains Mono", monospace;
+      letter-spacing: 0.04em;
     }
-    .dl-q-options {
+    .dl-buttons-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    /* clip-path ボタン（新LPの btn-dl と同一） */
+    .btn-dl {
+      display: inline-block;
+      background: var(--amber);
+      color: #fff;
+      text-decoration: none;
+      padding: 14px 40px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: "JetBrains Mono", monospace;
+      letter-spacing: 0.08em;
+      transition: background 0.2s, transform 0.15s;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+    .btn-dl:hover {
+      background: var(--amber-dim);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .btn-dl-sub {
+      background: transparent;
+      color: var(--gray-1);
+      border: 1px solid var(--border-amber);
+      clip-path: none;
+      padding: 10px 28px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+    }
+    .btn-dl-sub:hover {
+      background: var(--amber-glow);
+      color: var(--ink);
+      border-color: var(--amber);
+      transform: none;
+    }
+    .dl-sub-note {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      color: var(--gray-2);
+      letter-spacing: 0.06em;
+      margin-top: 4px;
+    }
+    .dl-start-msg {
+      display: none;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--cyan);
+      font-family: "JetBrains Mono", monospace;
+      letter-spacing: 0.04em;
+    }
+    .dl-start-msg::before { content: "// "; color: var(--gray-2); }
+
+    /* ===== アンケートブロック共通 ===== */
+    .dl-q-wrap,
+    .dl-q2-wrap,
+    .dl-fakedoor-wrap {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      padding: 24px 28px;
+      margin-bottom: 20px;
+    }
+    .dl-q-label,
+    .dl-fakedoor-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--amber);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .dl-q-label::before,
+    .dl-fakedoor-label::before { content: "// "; color: var(--gray-2); }
+    .dl-q-note,
+    .dl-fakedoor-note {
+      font-size: 13px;
+      color: var(--gray-1);
+      margin-bottom: 18px;
+      line-height: 1.7;
+    }
+
+    /* 選択ボタン共通 */
+    .dl-q-options,
+    .dl-fakedoor-options {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
-    .dl-q-btn {
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+    .dl-q-btn,
+    .dl-multi-btn,
+    .dl-fakedoor-btn {
+      background: var(--bg);
+      border: 1px solid var(--border);
       padding: 8px 16px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: background 0.12s, border-color 0.12s;
-      color: #333;
-      font-family: inherit;
-    }
-    .dl-q-btn:hover { border-color: #e67e22; background: #fff8f2; }
-    .dl-q-btn.selected { border-color: #e67e22; background: #e67e22; color: #fff; }
-    .dl-q-skip {
       font-size: 12px;
-      color: #aaa;
+      cursor: pointer;
+      color: var(--gray-1);
+      font-family: "Noto Sans JP", sans-serif;
+      letter-spacing: 0.02em;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+    }
+    .dl-q-btn:hover,
+    .dl-fakedoor-btn:hover {
+      border-color: var(--amber);
+      color: var(--ink);
+      background: var(--amber-glow);
+    }
+    .dl-q-btn.selected {
+      border-color: var(--amber);
+      background: var(--amber);
+      color: #fff;
+    }
+    .dl-fakedoor-btn.fired {
+      border-color: var(--amber);
+      background: var(--amber-glow);
+      color: var(--amber-dim);
+      cursor: default;
+    }
+
+    /* チェックボックス風複数選択 */
+    .dl-multi-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dl-multi-btn::before {
+      content: "";
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .dl-multi-btn:hover { border-color: var(--cyan); color: var(--ink); background: var(--cyan-glow); }
+    .dl-multi-btn:hover::before { border-color: var(--cyan); }
+    .dl-multi-btn.selected { border-color: var(--cyan); background: var(--cyan-glow); color: var(--ink); }
+    .dl-multi-btn.selected::before { background: var(--cyan); border-color: var(--cyan); }
+
+    /* スキップ・サンクス */
+    .dl-q-skip {
+      font-size: 11px;
+      color: var(--gray-2);
       cursor: pointer;
       text-decoration: underline;
+      text-underline-offset: 3px;
       background: none;
       border: none;
       padding: 0;
       margin-top: 8px;
       display: block;
-      font-family: inherit;
+      font-family: "JetBrains Mono", monospace;
+      letter-spacing: 0.04em;
+      transition: color 0.15s;
     }
-    .dl-q-skip:hover { color: #888; }
-    .dl-q-thanks { font-size: 13px; color: #555; margin-top: 8px; display: none; }
-
-    /* ===== DLボタンエリア ===== */
-    .dl-area {
-      text-align: center;
-      margin: 0 0 32px;
-      padding: 36px 20px;
-      background: #1a1a2e;
-      border-radius: 8px;
-    }
-    .dl-area-note { color: #bbb; font-size: 14px; margin-bottom: 20px; }
-    .btn-dl {
-      display: inline-block;
-      background: #e67e22;
-      color: #fff;
-      text-decoration: none;
-      padding: 16px 44px;
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 5px;
-      letter-spacing: 0.02em;
-      transition: background 0.15s;
-    }
-    .btn-dl:hover { background: #d35400; text-decoration: none; color: #fff; }
-    .btn-dl-sub {
-      background: #555;
-      font-size: 15px;
-      padding: 12px 36px;
-    }
-    .btn-dl-sub:hover { background: #444; }
-    .dl-sub-note { margin-top: 10px; font-size: 13px; color: #888; }
-    .dl-start-msg {
+    .dl-q-skip:hover { color: var(--gray-1); }
+    .dl-q-thanks {
+      font-size: 11px;
+      color: var(--cyan);
+      margin-top: 10px;
       display: none;
-      margin-top: 16px;
-      font-size: 14px;
-      color: #4ade80;
+      font-family: "JetBrains Mono", monospace;
+      letter-spacing: 0.04em;
     }
+    .dl-q-thanks::before { content: "// "; color: var(--gray-2); }
 
-    /* ===== Q2セクション ===== */
-    .dl-q2-wrap {
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-      padding: 20px;
-      background: #fafafa;
-      margin-bottom: 20px;
-    }
-    .dl-multi-btn {
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 8px 16px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: background 0.12s, border-color 0.12s;
-      color: #333;
-      font-family: inherit;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .dl-multi-btn::before {
-      content: "";
-      display: inline-block;
-      width: 13px;
-      height: 13px;
-      border: 1px solid #ccc;
-      border-radius: 2px;
-      flex-shrink: 0;
-      transition: background 0.12s, border-color 0.12s;
-    }
-    .dl-multi-btn:hover { border-color: #1a1a2e; background: #f0f2f5; }
-    .dl-multi-btn.selected { border-color: #1a1a2e; background: #f0f2f5; }
-    .dl-multi-btn.selected::before { background: #1a1a2e; border-color: #1a1a2e; }
-
-    /* ===== Q3テキスト入力 ===== */
+    /* Q3テキスト入力 */
     .dl-text-input {
       width: 100%;
       max-width: 480px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 8px 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      padding: 9px 12px;
       font-size: 13px;
-      color: #333;
-      margin-top: 6px;
-      margin-bottom: 4px;
-      font-family: inherit;
-    }
-    .dl-text-input:focus { outline: none; border-color: #e67e22; }
-    .dl-text-hint { font-size: 12px; color: #aaa; }
-
-    /* ===== 価格フェイクドア ===== */
-    .dl-fakedoor-wrap {
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-      padding: 20px;
-      background: #fafafa;
-      margin-top: 20px;
-    }
-    .dl-fakedoor-label {
-      font-size: 15px;
-      font-weight: bold;
-      color: #222;
-      margin-bottom: 6px;
-    }
-    .dl-fakedoor-note {
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 14px;
-      line-height: 1.55;
-    }
-    .dl-fakedoor-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-    .dl-fakedoor-btn {
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 8px 16px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: background 0.12s, border-color 0.12s;
-      color: #333;
-      font-family: inherit;
-    }
-    .dl-fakedoor-btn:hover { border-color: #e67e22; background: #fff8f2; }
-    .dl-fakedoor-btn.fired { border-color: #e67e22; background: #fff8f2; color: #c0392b; cursor: default; }
-    .dl-fakedoor-feedback {
-      font-size: 13px;
-      color: #555;
+      color: var(--ink);
       margin-top: 8px;
+      margin-bottom: 4px;
+      font-family: "Noto Sans JP", sans-serif;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .dl-text-input:focus { border-color: var(--amber); }
+    .dl-text-hint {
+      font-size: 11px;
+      color: var(--gray-2);
+      font-family: "JetBrains Mono", monospace;
+      letter-spacing: 0.04em;
+    }
+
+    /* フェイクドアフィードバック */
+    .dl-fakedoor-feedback {
+      font-size: 12px;
+      color: var(--cyan);
+      margin-top: 10px;
       display: none;
-      padding: 8px 12px;
-      background: #fff;
-      border-left: 3px solid #e67e22;
-      border-radius: 0 4px 4px 0;
+      padding: 8px 14px;
+      border-left: 2px solid var(--cyan);
+      font-family: "JetBrains Mono", monospace;
+      letter-spacing: 0.04em;
     }
 
-    /* ===== フッター ===== */
+    /* ===== フッター（新LPと同一構造） ===== */
     footer {
-      background: #111;
-      color: #666;
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--gray-2);
       text-align: center;
-      padding: 28px 20px;
-      font-size: 13px;
+      padding: 32px 24px;
+      font-size: 12px;
       line-height: 2;
+      font-family: "JetBrains Mono", monospace;
     }
-    footer a { color: #999; }
-    footer a:hover { color: #bbb; }
-    .footer-links { display: flex; gap: 20px; justify-content: center; margin-bottom: 12px; }
-    .footer-links a { color: #666; transition: color 0.15s; }
-    .footer-links a:hover { color: #fff; }
+    footer a { color: var(--gray-2); transition: color 0.15s; }
+    footer a:hover { color: var(--cyan); }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--gray-2);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: var(--cyan); }
+    .footer-copy { color: var(--gray-2); letter-spacing: 0.06em; }
+    .footer-copy::before { content: "// "; }
 
-    /* ===== スマホ調整 ===== */
-    @media (max-width: 480px) {
-      .dl-page-header { padding: 36px 16px 28px; }
-      .section-inner { padding: 36px 16px; }
-      .btn-dl { padding: 14px 32px; font-size: 16px; }
+    /* ===== モバイル ===== */
+    @media (max-width: 600px) {
+      .site-nav { padding: 0 20px; }
+      .dl-page-header { padding: 48px 20px 36px; }
+      .section-inner { padding: 40px 20px; }
+      .dl-area { padding: 28px 20px; }
+      .dl-q-wrap, .dl-q2-wrap, .dl-fakedoor-wrap { padding: 20px 16px; }
       .dl-q-options, .dl-fakedoor-options { flex-direction: column; }
       .dl-q-btn, .dl-multi-btn, .dl-fakedoor-btn { width: 100%; text-align: left; }
       .dl-text-input { max-width: 100%; }
+      .btn-dl { padding: 13px 28px; font-size: 13px; }
     }
   </style>
 </head>
@@ -320,12 +435,13 @@
 
 <!-- ナビバー -->
 <nav class="site-nav">
-  <a href="index.html" class="nav-logo">FabGear</a>
-  <a href="index.html" class="nav-back">← ドコカワ トップ</a>
+  <a href="index.html" class="nav-logo">ドコカワ</a>
+  <a href="index.html" class="nav-back">ドコカワ トップ</a>
 </nav>
 
 <!-- ページヘッダー -->
 <div class="dl-page-header">
+  <p class="dl-page-header-tag">DOWNLOAD</p>
   <h1>ドコカワ ダウンロード</h1>
   <p>Windows 10 / 11（64bit）対応 &nbsp;·&nbsp; 無料 &nbsp;·&nbsp; ローカル完結</p>
 </div>
@@ -338,7 +454,7 @@
     form_role イベント名を維持（既存データとの連続性）
   -->
   <div class="dl-q-wrap" id="dlQ1Wrap">
-    <div class="dl-q-label">Q1. あなたの立場を教えてください（1つ）</div>
+    <div class="dl-q-label">Q1 &mdash; 立場を教えてください（1つ）</div>
     <p class="dl-q-note">
       ダウンロード前に1つだけ聞かせてください（任意・スキップ可）。<br>
       使い方を教えてもらえると、どんな機能が必要かの参考になります。
@@ -361,20 +477,26 @@
       zip:       https://github.com/FabGear-JP/docokawa/releases/download/v1.1/docokawa_v1.1.zip
   -->
   <div class="dl-area">
-    <p class="dl-area-note">どちらも中身は同じです。お好きな方をどうぞ。</p>
-    <a href="https://github.com/FabGear-JP/docokawa/releases/download/v1.1/docokawa_setup_v1.1.exe"
-       class="btn-dl"
-       onclick="fireDlDownload('installer');">
-      インストーラー版をダウンロード（推奨）
-    </a>
-    <p class="dl-sub-note">実行するだけ &nbsp;·&nbsp; デスクトップにショートカット作成</p>
-    <br><br>
-    <a href="https://github.com/FabGear-JP/docokawa/releases/download/v1.1/docokawa_v1.1.zip"
-       class="btn-dl btn-dl-sub"
-       onclick="fireDlDownload('zip');">
-      ZIP版をダウンロード
-    </a>
-    <p class="dl-sub-note">インストール不要 &nbsp;·&nbsp; USBで持ち運べる</p>
+    <p class="block-label">DL_LINK</p>
+    <p class="dl-area-note">どちらも中身は同じです。</p>
+    <div class="dl-buttons-wrap">
+      <div>
+        <a href="https://github.com/FabGear-JP/docokawa/releases/download/v1.1/docokawa_setup_v1.1.exe"
+           class="btn-dl"
+           onclick="fireDlDownload('installer');">
+          インストーラー版をダウンロード（推奨）
+        </a>
+        <p class="dl-sub-note">実行するだけ &nbsp;·&nbsp; デスクトップにショートカット作成</p>
+      </div>
+      <div>
+        <a href="https://github.com/FabGear-JP/docokawa/releases/download/v1.1/docokawa_v1.1.zip"
+           class="btn-dl btn-dl-sub"
+           onclick="fireDlDownload('zip');">
+          ZIP版をダウンロード
+        </a>
+        <p class="dl-sub-note">インストール不要 &nbsp;·&nbsp; USBで持ち運べる</p>
+      </div>
+    </div>
     <div id="dlStartMsg" class="dl-start-msg">
       ダウンロードが始まります。その間に1問だけ（スキップ可）。
     </div>
@@ -385,7 +507,7 @@
     form_motive_main イベント名を維持
   -->
   <div class="dl-q2-wrap" id="dlQ2aWrap">
-    <div class="dl-q-label">Q2. 使おうと思った主な理由（1つ）</div>
+    <div class="dl-q-label">Q2 &mdash; 使おうと思った主な理由（1つ）</div>
     <p class="dl-q-note">同じ立場の人が多ければ、開発優先度の参考にします（任意）。</p>
     <div class="dl-q-options" id="dlQ2aOptions">
       <button type="button" class="dl-q-btn" data-val="P_review" onclick="selectDlQ2a(this)">修正ファイルのどこが変わったか確認したい</button>
@@ -403,7 +525,7 @@
     選択変更のたびに現在選択中の全値をカンマ区切りで送信
   -->
   <div class="dl-q2-wrap" id="dlQ2bWrap">
-    <div class="dl-q-label">Q2b. 当てはまるものをすべて選んでください</div>
+    <div class="dl-q-label">Q2b &mdash; 当てはまるものをすべて選んでください</div>
     <p class="dl-q-note">複数選んでもOKです（任意）。</p>
     <div class="dl-q-options" id="dlQ2bOptions">
       <button type="button" class="dl-multi-btn" data-val="P_review" onclick="toggleDlQ2b(this)">修正ファイルのどこが変わったか確認したい</button>
@@ -421,7 +543,7 @@
     maxlength="100"（ヒント文「100文字以内」と整合）
   -->
   <div class="dl-q2-wrap">
-    <div class="dl-q-label">Q3. 職種・役割を自由に教えてください（任意）</div>
+    <div class="dl-q-label">Q3 &mdash; 職種・役割（任意）</div>
     <input type="text" class="dl-text-input" id="dlQ3Text"
            placeholder="例: 購買、見積、調達、品管 など"
            maxlength="100"
@@ -436,36 +558,42 @@
     仕込み手順.md④「控えめに残す」実装準拠
   -->
   <div class="dl-fakedoor-wrap">
-    <div class="dl-fakedoor-label">検討中の機能（いまは無料。将来は有料になるかもしれません）</div>
+    <div class="dl-fakedoor-label">検討中の機能</div>
     <p class="dl-fakedoor-note">
-      もし有料でも使いたい機能があれば教えてください。<br>
-      開発の優先度の参考にします（購入は発生しません）。
+      いまは無料。将来は有料になるかもしれません。<br>
+      もし有料でも使いたい機能があれば教えてください。開発の優先度の参考にします（購入は発生しません）。
     </p>
     <div class="dl-fakedoor-options">
       <button type="button" class="dl-fakedoor-btn" data-feature="pdf_export" data-tier="1000" onclick="fireFakeDoor(this)">PDF出力</button>
       <button type="button" class="dl-fakedoor-btn" data-feature="bom_extraction" data-tier="1000" onclick="fireFakeDoor(this)">BOM詳細管理</button>
       <button type="button" class="dl-fakedoor-btn" data-feature="team_share" data-tier="2000" onclick="fireFakeDoor(this)">複数人で共有</button>
     </div>
-    <p style="font-size:12px;color:#aaa;margin-top:4px;">選ばなくても構いません</p>
+    <p style="font-size:11px;color:var(--gray-2);margin-top:4px;font-family:'JetBrains Mono',monospace;">選ばなくても構いません</p>
     <div class="dl-fakedoor-feedback" id="dlFakedoorFeedback">ありがとうございます。参考にします。</div>
   </div>
 
 </div><!-- /.section-inner -->
 
-<!-- フッター -->
+<!-- フッター（新LPと同一構造） -->
 <footer>
   <div class="footer-links">
     <a href="https://x.com/FabGear_jp" title="X (Twitter)" target="_blank" rel="noopener">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      X
     </a>
     <a href="https://github.com/FabGear-JP" title="GitHub" target="_blank" rel="noopener">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      GitHub
     </a>
     <a href="mailto:fabgear.jp@gmail.com" title="メール">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      Mail
     </a>
   </div>
-  <p>設備設計者が自分用に作ったツールです。</p>
+  <p class="footer-copy">設備設計者が自分用に作ったツールです。</p>
+  <p style="margin-top:8px; font-size:11px; font-family:'JetBrains Mono',monospace; letter-spacing:0.06em;">
+    <a href="https://fabgear-jp.github.io/privacy.html" style="color:var(--gray-2); text-decoration:none; transition:color 0.15s;" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='var(--gray-2)'">プライバシーポリシー</a>
+  </p>
 </footer>
 
 
