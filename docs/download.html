@@ -383,6 +383,46 @@
       letter-spacing: 0.04em;
     }
 
+    /* ===== DL済みフィードバックブロック（cyan系・既存Q1-Q3と視覚分離） ===== */
+    .dl-used-wrap {
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--cyan);
+      background: var(--bg);
+      padding: 24px 28px;
+      margin-bottom: 20px;
+    }
+    .dl-used-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .dl-used-label::before { content: "// "; color: var(--gray-2); }
+    .dl-used-btn {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--gray-1);
+      font-family: "Noto Sans JP", sans-serif;
+      letter-spacing: 0.02em;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+    }
+    .dl-used-btn:hover {
+      border-color: var(--cyan);
+      color: var(--ink);
+      background: var(--cyan-glow);
+    }
+    .dl-used-btn.selected {
+      border-color: var(--cyan);
+      background: var(--cyan);
+      color: #fff;
+    }
+
     /* ===== フッター（新LPと同一構造） ===== */
     footer {
       border-top: 1px solid var(--border);
@@ -423,9 +463,9 @@
       .dl-page-header { padding: 48px 20px 36px; }
       .section-inner { padding: 40px 20px; }
       .dl-area { padding: 28px 20px; }
-      .dl-q-wrap, .dl-q2-wrap, .dl-fakedoor-wrap { padding: 20px 16px; }
+      .dl-q-wrap, .dl-q2-wrap, .dl-fakedoor-wrap, .dl-used-wrap { padding: 20px 16px; }
       .dl-q-options, .dl-fakedoor-options { flex-direction: column; }
-      .dl-q-btn, .dl-multi-btn, .dl-fakedoor-btn { width: 100%; text-align: left; }
+      .dl-q-btn, .dl-multi-btn, .dl-fakedoor-btn, .dl-used-btn { width: 100%; text-align: left; }
       .dl-text-input { max-width: 100%; }
       .btn-dl { padding: 13px 28px; font-size: 13px; }
     }
@@ -500,6 +540,34 @@
     <div id="dlStartMsg" class="dl-start-msg">
       ダウンロードが始まります。その間に1問だけ（スキップ可）。
     </div>
+  </div>
+
+  <!-- ===== DL済みフィードバック（form_used_feedback + form_used_comment）===== -->
+  <!--
+    配置: .dl-area 直下・既存 .dl-q2-wrap の前
+    既存Q1-Q3（amber系）と視覚分離: border-top=cyan
+    GA4: form_used_feedback(value=used/not_started/failed)
+         form_used_comment(value=テキスト100字以内)
+  -->
+  <div class="dl-used-wrap" id="dlUsedWrap">
+    <div class="dl-used-label">DL済みの方へ</div>
+    <p class="dl-q-note">
+      すでにダウンロード済みの方、使ってみた感想を教えてください。バグ報告でも「使えてない」でも構いません。次のバージョンの参考にします。
+    </p>
+    <div class="dl-q-options" id="dlUsedOptions">
+      <button type="button" class="dl-used-btn" data-val="used" onclick="selectDlUsed(this)">起動して使った</button>
+      <button type="button" class="dl-used-btn" data-val="not_started" onclick="selectDlUsed(this)">DLしたけどまだ起動していない</button>
+      <button type="button" class="dl-used-btn" data-val="failed" onclick="selectDlUsed(this)">起動しようとしたが動かなかった</button>
+    </div>
+    <div id="dlUsedCommentWrap" style="display:none; margin-top:12px;">
+      <p class="dl-text-hint" id="dlUsedCommentHint" style="margin-bottom:6px;"></p>
+      <input type="text" class="dl-text-input" id="dlUsedCommentInput"
+             maxlength="100"
+             onblur="sendDlUsedComment(this)">
+      <p class="dl-text-hint">100文字以内・任意。個人が特定される情報は不要です。</p>
+    </div>
+    <button type="button" class="dl-q-skip" onclick="skipDlUsed()">スキップ</button>
+    <div class="dl-q-thanks" id="dlUsedThanks">ありがとうございます。</div>
   </div>
 
   <!-- ===== Q2a: 主な動機（単一選択）===== -->
@@ -715,6 +783,52 @@
     });
     btn.classList.add('fired');
     document.getElementById('dlFakedoorFeedback').style.display = 'block';
+  }
+
+  /* ===== DL済みフィードバック（form_used_feedback + form_used_comment）===== */
+  function selectDlUsed(btn) {
+    document.querySelectorAll('#dlUsedOptions .dl-used-btn').forEach(function(b){
+      b.classList.remove('selected');
+    });
+    btn.classList.add('selected');
+    var val = btn.getAttribute('data-val');
+    gtag('event', 'form_used_feedback', {
+      value: val,
+      traffic_source: sessionStorage.getItem('traffic_source') || 'direct'
+    });
+    var commentWrap = document.getElementById('dlUsedCommentWrap');
+    var commentHint = document.getElementById('dlUsedCommentHint');
+    var commentInput = document.getElementById('dlUsedCommentInput');
+    commentInput.dataset.sent = ''; // 選択変更時は再送可
+    commentInput.value = '';
+    if (val === 'used') {
+      commentHint.textContent = '一言教えてください（役立った点/困った点）';
+      commentInput.placeholder = '例: STEP差分が一目でわかった';
+      commentWrap.style.display = 'block';
+    } else if (val === 'failed') {
+      commentHint.textContent = 'どんな状況か（Windowsバージョン・エラー内容）';
+      commentInput.placeholder = '例: Windows 10・起動時にエラー';
+      commentWrap.style.display = 'block';
+    } else {
+      // not_started: テキスト欄なし
+      commentWrap.style.display = 'none';
+    }
+    document.getElementById('dlUsedThanks').style.display = 'block';
+  }
+
+  function skipDlUsed() {
+    document.getElementById('dlUsedWrap').style.display = 'none';
+  }
+
+  function sendDlUsedComment(input) {
+    if (input.dataset.sent === '1') return;
+    var trimmed = input.value.trim().substring(0, 100);
+    if (trimmed.length === 0) return;
+    gtag('event', 'form_used_comment', {
+      value: trimmed,
+      traffic_source: sessionStorage.getItem('traffic_source') || 'direct'
+    });
+    input.dataset.sent = '1';
   }
 </script>
 
